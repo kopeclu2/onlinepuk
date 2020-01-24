@@ -9,10 +9,10 @@
     },
     "scripts": {
         "start:dev": "nodemon --exec babel-node ./src/server.js",
-        "start": "concurrently \"cd client && npm run build && npm start\" \"node dist/server.js\" " ,
+        "start": "concurrently \"node dist/server.js\" " ,
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "concurrently \"cd client && npm run build && npm start\" \"nodemon --exec babel-node ./src/server.js\" ",
-        "build": "babel src --out-dir dist",
+        "build": "concurrently \"babel src --out-dir dist\" \" cd client && npm run build \" ",
         "start:a": "node dist/server.js"
     },
     "dependencies": {
