@@ -42,7 +42,11 @@ var serverIO = _http["default"].createServer(app);
 
 var io = (0, _socket["default"])(serverIO);
 
-_connectionDb["default"].connect();
+try {
+  _connectionDb["default"].connect();
+} catch (err) {
+  console.log(err);
+}
 
 app.use(bodyParser.urlencoded({
   extended: false
@@ -50,8 +54,12 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(cors()); // api routes
 
+app.use(express["static"](_path["default"].join(__dirname, '/../client/build')));
+app.get('/', function (req, res) {
+  res.sendFile(_path["default"].join(__dirname + '/../client/build/index.html'));
+  console.log(_path["default"].dirname(require.main.filename));
+});
 app.use('/users', _users["default"]);
-app.use(express["static"](_path["default"].join(__dirname, 'client/build')));
 app.use('/matches', _matches["default"]);
 app.use('/teams', _teams["default"]);
 app.use('/comment', _usersComments["default"]);

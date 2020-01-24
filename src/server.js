@@ -19,15 +19,23 @@ import matchesService from './services/matches.service';
 var serverIO = http.createServer(app);
 
 const io = socketio(serverIO)
-db.connect();
+try {
+  db.connect();
+} catch (err) {console.log(err)}
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
 // api routes
+app.use(express.static(path.join(__dirname, '/../client/build')))
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+  console.log(path.dirname(require.main.filename))
+});
 app.use('/users',userController);
-app.use('/',express.static(path.join(__dirname, 'client/build')))
+
 app.use('/matches', matchController )
 app.use('/teams', teamsController)
 app.use('/comment', commentController)
