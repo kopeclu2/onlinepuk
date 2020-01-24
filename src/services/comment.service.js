@@ -1,5 +1,5 @@
 import db from "../_helpers/connectionDb";
-import { isNil, isEmpty } from "ramda";
+import { isNil } from "ramda";
 
 const addCommnet = ({ user, body }) => {
   return new Promise((res, rej) =>

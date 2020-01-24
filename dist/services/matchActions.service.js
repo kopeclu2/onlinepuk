@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -8,8 +10,6 @@ exports["default"] = void 0;
 var _connectionDb = _interopRequireDefault(require("../_helpers/connectionDb"));
 
 var _ramda = require("ramda");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var addAction = function addAction(_ref) {
   var body = _ref.body;

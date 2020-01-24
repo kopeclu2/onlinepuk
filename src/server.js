@@ -12,14 +12,10 @@ import commentController from './controllers/usersComments.controller'
 import matchActionController from './controllers/matchAction.controller'
 import http from 'http'
 import socketio from 'socket.io'
-import socketioAuth from 'socketio-auth'
-import socketioJWT from 'socketio-jwt'
 import config from './config.json'
-import jwtDecode from 'jwt-decode'
 import jwt from 'jsonwebtoken'
 import path from 'path'
 import matchesService from './services/matches.service';
-import matchActionsService from './services/matchActions.service';
 var serverIO = http.createServer(app);
 
 const io = socketio(serverIO)

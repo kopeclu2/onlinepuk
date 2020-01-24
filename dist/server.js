@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 var _errorHandler = _interopRequireDefault(require("./_helpers/error-handler"));
 
 var _users = _interopRequireDefault(require("./controllers/users.controller"));
@@ -18,23 +20,13 @@ var _http = _interopRequireDefault(require("http"));
 
 var _socket = _interopRequireDefault(require("socket.io"));
 
-var _socketioAuth = _interopRequireDefault(require("socketio-auth"));
-
-var _socketioJwt = _interopRequireDefault(require("socketio-jwt"));
-
 var _config = _interopRequireDefault(require("./config.json"));
-
-var _jwtDecode = _interopRequireDefault(require("jwt-decode"));
 
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 
 var _path = _interopRequireDefault(require("path"));
 
 var _matches2 = _interopRequireDefault(require("./services/matches.service"));
-
-var _matchActions = _interopRequireDefault(require("./services/matchActions.service"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 require('rootpath')();
 
