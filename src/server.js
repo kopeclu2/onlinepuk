@@ -27,7 +27,7 @@ app.use(cors());
 
 // api routes
 app.use('/users',userController);
-app.use(express.static(path.join(__dirname, 'client/build')))
+app.use('/',express.static(path.join(__dirname, 'client/build')))
 app.use('/matches', matchController )
 app.use('/teams', teamsController)
 app.use('/comment', commentController)
