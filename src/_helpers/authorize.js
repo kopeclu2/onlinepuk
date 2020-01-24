@@ -1,5 +1,5 @@
 const expressJwt = require('express-jwt');
-const { secret } = require('config.json');
+import { secret } from '../config.json'
 
 module.exports = authorize;
 
@@ -18,7 +18,7 @@ function authorize(roles = []) {
         (req, res, next) => {
             if (roles.length && !roles.includes(req.user.role)) {
                 // user's role is not authorized
-                return res.status(401).json({ message: 'Unauthorized' });
+                return res.status(401).json({ message: 'Nemáte dostatečná práva ! ' });
             }
 
             // authentication and authorization successful

@@ -1,14 +1,21 @@
-﻿const express = require('express');
+﻿import express from 'express'
 const router = express.Router();
-const userService = require('./user.service');
-const authorize = require('_helpers/authorize')
-const Role = require('_helpers/role');
+import userService from '../services/user.service';
+import authorize from '../_helpers/authorize'
+import Role from '../_helpers/role'
 
 // routes
 router.post('/authenticate', authenticate);     // public route
 router.get('/', authorize(Role.Admin), getAll); // admin only
-router.get('/:id', authorize(), getById);       // all authenticated users
-module.exports = router;
+router.get('/:id', authorize(), getById);
+router.post('/signup', signup)       // all authenticated users
+export default router;
+
+function signup(req,res,next) {
+    userService.signUp(req.body)
+    .then((result) => authenticate(req,res,next))
+    .catch(err => res.status(400).json(err))
+} 
 
 function authenticate(req, res, next) {
     userService.authenticate(req.body)
