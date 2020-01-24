@@ -54,9 +54,9 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(cors()); // api routes
 
-app.use(express["static"](_path["default"].join(__dirname, '/../client/build')));
+app.use(express["static"](_path["default"].join(__dirname, '/../frontend/build')));
 app.get('/', function (req, res) {
-  res.sendFile(_path["default"].join(__dirname + '/../client/build/index.html'));
+  res.sendFile(_path["default"].join(__dirname + '/../frontend/build/index.html'));
   console.log(_path["default"].dirname(require.main.filename));
 });
 app.use('/users', _users["default"]);
