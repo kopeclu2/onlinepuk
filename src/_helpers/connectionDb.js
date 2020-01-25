@@ -13,7 +13,7 @@ const localConnection = {
   database : 'onlinepuk'
 }
 export const conectionObj = process.env.NODE_ENV ==='production' ? prodConnection : localConnection;
-var connection = mysql.createConnection(localConnection);
+var connection = mysql.createConnection(conectionObj);
 const connect = () => {
   connection.connect(function(err) {
     if (err) {
