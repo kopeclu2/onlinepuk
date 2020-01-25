@@ -2,7 +2,7 @@
     "presets": ["@babel/preset-env"],
     "env":{
         "production":{
-            "plugins": ["@babel/runtime"]
+            "plugins": ["@babel/plugin-transform-runtime"]
         },
         "development": {
             "plugins": ["@babel/plugin-transform-runtime"]
