@@ -1,12 +1,19 @@
 import mysql from 'mysql'
 
-
-var connection = mysql.createConnection({
-    host     : 'eu-cdbr-west-02.cleardb.net',
-    user     : 'bf6d58fc3eb263',
-    password : 'baf1a3a1',
-    database : 'heroku_830860e9211f00b'
-  });
+const prodConnection  = {
+  host     : 'eu-cdbr-west-02.cleardb.net',
+  user     : 'bf6d58fc3eb263',
+  password : 'baf1a3a1',
+  database : 'heroku_830860e9211f00b'
+};
+const localConnection = {
+  host     : 'localhost',
+  user     : 'root',
+  password : '',
+  database : 'onlinepuk'
+}
+export const conectionObj = process.env.NODE_ENV ==='production' ? prodConnection : localConnection;
+var connection = mysql.createConnection(conectionObj);
 const connect = () => {
   connection.connect(function(err) {
     if (err) {

@@ -11,6 +11,7 @@ import { loadTeams } from '../actions/teams'
 import { loadMatches } from '../actions/matches'
 import {connect} from 'react-redux'
 import { socketConnect } from 'socket.io-react';
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -33,7 +34,7 @@ const LandingPage = ({loadTeams, loadMatches, socket}) => {
             loadTeams();
         setInterval(()=> {
                 loadMatches();
-            }, 10000)
+            }, 30000)
     },[])
     
     const sendSocket = () => {
@@ -46,29 +47,22 @@ const LandingPage = ({loadTeams, loadMatches, socket}) => {
         <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
             <Container maxWidth={'lg'} style={{marginTop: "20px"}} >
                 <Grid container spacing={3} >
-                    <Grid item xs={12} sm={12} md={7}>
-                        <SimpleTable />
+                    <Grid item xs={12} sm={12} md={5}>
+                    <Divider style={{ marginBottom: '2px'}} />
+                         <Typography variant={'body1'} align={'center'} color={'textSecondary'}>Odehrané zápasy</Typography>
+                        <Matches finished />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={2}>
+                        {''}
                     </Grid>
                     <Grid item xs={12} sm={12} md={5}>
                           <Divider style={{ marginBottom: '2px'}} />
                          <Typography variant={'body1'} align={'center'} color={'textSecondary'}>Nejbližší zápas</Typography>
-                        {!isEmpty(matches) && <Match match={matches[0]}/>}
+                        {!isEmpty(matches) && <Link to={`/match/${matches[0].id}`}><Match match={matches[0]}/></Link>}
                         
                         <Divider style={{marginTop:'15px', marginBottom: '2px'}} />
                         <Typography variant={'body1'} align={'center'} color={'textSecondary'}>Nadcházející zápasy</Typography>
                         <Matches/>
-                    </Grid>
-                    <Grid item xs={3} sm={3}>
-                        <Paper className={classes.paper}><Button onClick={()=> sendSocket()} >Send</Button></Paper>
-                    </Grid>
-                    <Grid item xs={3} sm={3}>
-                        <Paper className={classes.paper}>xs=3</Paper>
-                    </Grid>
-                    <Grid item xs={3} sm={3}>
-                        <Paper className={classes.paper}>xs=3</Paper>
-                    </Grid>
-                    <Grid item xs={3} sm={6}>
-                        <Paper className={classes.paper}>xs=3</Paper>
                     </Grid>
                 </Grid>
             </Container>

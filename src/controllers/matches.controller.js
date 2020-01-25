@@ -8,6 +8,9 @@ import Role from "../_helpers/role";
 router.get("", (req, res) => {
   matchService.getAllMatches(req, res);
 });
+router.get("/finished", (req, res) => {
+  matchService.getAllFinsihedMatches(req, res);
+});
 
 router.get("/:id", getMatchId);
 router.post("/create", authorize(Role.Admin), createMatch);

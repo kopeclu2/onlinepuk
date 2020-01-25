@@ -17,6 +17,9 @@ var router = _express["default"].Router();
 router.get("", function (req, res) {
   _matches["default"].getAllMatches(req, res);
 });
+router.get("/finished", function (req, res) {
+  _matches["default"].getAllFinsihedMatches(req, res);
+});
 router.get("/:id", getMatchId);
 router.post("/create", (0, _authorize["default"])(_role["default"].Admin), createMatch);
 router.post("/:id/edit", (0, _authorize["default"])(_role["default"].Admin), editMatch);

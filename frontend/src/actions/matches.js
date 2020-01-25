@@ -13,6 +13,11 @@ export const loadMatches = () => (dispatch) => {
         dispatch({type: 'LOADING_MATCHES_FINISH'})
     })
     .catch((err) => {})
+    Axios.get('http://localhost:4000/matches/finished')
+    .then(({data}) =>{
+        dispatch({type:'LOADING_MATCHES_FINSIHED', payload: data})
+    })
+    .catch((err) => {})
     
 }
 

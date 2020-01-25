@@ -2,7 +2,8 @@ import { match, mergeRight } from "ramda"
 
 const initialState = {
     matchesLoading: false,
-    matches: []
+    matches: [],
+    finishedMatches: [],
 }
 const matchesReducer = (state = initialState , {payload, type}) => {
     switch(type){
@@ -32,6 +33,11 @@ const matchesReducer = (state = initialState , {payload, type}) => {
                 ...state,
                 matches: newMatches
               }
+              case 'LOADING_MATCHES_FINSIHED': 
+              return {
+                 ...state,
+                 finishedMatches: [...payload]
+               }
         case 'UPDATE_SCORE_AFTER_GOAL_SOCKET':
         const updatedMatchIndex = state.matches.findIndex((match) => match.id === payload.id)
         const updatedMatch = mergeRight(state.matches[updatedMatchIndex],payload)

@@ -8,7 +8,7 @@ import { promisePool } from "../_helpers/connectionDb2";
 const arrayToPush = new Array();
 const getAllMatches = async (req, res) => {
   const [rows, fields, err, a] = await promisePool.query(
-    "SELECT * FROM matches"
+    "SELECT * FROM matches ORDER BY date"
   );
   let arr = new Array();
   for (let team of rows) {
@@ -34,6 +34,36 @@ const getAllMatches = async (req, res) => {
   }
   res.send(arr);
 };
+const getAllFinsihedMatches = async (req,res) => {
+  const [rows, fields, err, a] = await promisePool.query(
+    "SELECT * FROM matches WHERE finished = 1 ORDER BY date"
+  );
+  console.log(rows)
+  let arr = new Array();
+  for (let team of rows) {
+    console.log(team)
+    const [
+      teamHome
+    ] = await promisePool.query("SELECT * FROM teams WHERE id =?", [
+      team.teamHome
+    ]);
+    const [
+      teamHost
+    ] = await promisePool.query("SELECT * FROM teams WHERE id =?", [
+      team.teamHost
+    ]);
+    const userMessages = await commentService.getTeamsUsersComments(team.id);
+    const actions = await actionsService.getActionsOfMatchById(team.id);
+    arr.push({
+      ...team,
+      teamHome: { ...teamHome[0] },
+      teamHost: { ...teamHost[0] },
+      userMessages,
+      actions
+    });
+  }
+  res.send(arr);
+}
 
 const getMatchId = async (req, res) => {
   const id = parseInt(req.params.id);
@@ -141,5 +171,6 @@ export default {
   createMatch,
   editMatch,
   editMatchScore,
-  getMatch
+  getMatch,
+  getAllFinsihedMatches
 };
