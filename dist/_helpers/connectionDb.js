@@ -24,7 +24,7 @@ var localConnection = {
 var conectionObj = process.env.NODE_ENV === 'production' ? prodConnection : localConnection;
 exports.conectionObj = conectionObj;
 
-var connection = _mysql["default"].createConnection(conectionObj);
+var connection = _mysql["default"].createConnection(localConnection);
 
 var connect = function connect() {
   connection.connect(function (err) {

@@ -11,7 +11,12 @@ var _mysql = _interopRequireDefault(require("mysql2"));
 
 var _connectionDb = require("./connectionDb.js");
 
-var connection = _mysql["default"].createPool(_connectionDb.conectionObj);
+var connection = _mysql["default"].createPool({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'onlinepuk'
+});
 
 var promisePool = connection.promise();
 exports.promisePool = promisePool;

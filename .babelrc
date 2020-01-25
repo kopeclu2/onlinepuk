@@ -1,4 +1,12 @@
 {
     "presets": ["@babel/preset-env"],
-    "plugins": ["@babel/plugin-transform-runtime"]
+    "env":{
+        "production":{
+            "plugins": ["@babel/runtime"]
+        },
+        "development": {
+            "plugins": ["@babel/plugin-transform-runtime"]
+        }
+    }
+   
 }
