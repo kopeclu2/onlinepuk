@@ -38,10 +38,8 @@ const getAllFinsihedMatches = async (req,res) => {
   const [rows, fields, err, a] = await promisePool.query(
     "SELECT * FROM matches WHERE finished = 1 ORDER BY date"
   );
-  console.log(rows)
   let arr = new Array();
   for (let team of rows) {
-    console.log(team)
     const [
       teamHome
     ] = await promisePool.query("SELECT * FROM teams WHERE id =?", [
@@ -103,9 +101,12 @@ const createMatch = (req, res) => {
     matchState
   } = req.body;
   db.connection.query(
-    "INSERT INTO `matches`(name,teamHome,teamHost,scoreHome,scoreHost,date,matchState) VALUES (?,?,?,?,?,?,?)",
-    [name, teamHome, teamHost, scoreHome, scoreHost, date, matchState],
+    "INSERT INTO matches(name,teamHome,teamHost,scoreHome,scoreHost,date,matchState,finished,stadion) VALUES (?,?,?,?,?,?,?,?,?)",
+    [name, teamHome, teamHost, scoreHome, scoreHost, date, matchState,0,'DEFAULT VALUE'],
     (err, result, fields) => {
+      if(err) {
+        res.status(400).send({message: 'Nepodařilo se přidat zápas'})
+      }
       getAllMatches(req, res);
     }
   );

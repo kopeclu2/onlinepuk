@@ -28,7 +28,7 @@ class Matches extends Component {
       ) : (
         matches &&
         matches.map((match, index) =>
-          match.finished === 0 ? (
+          index === 0 ? null : match.finished === 0 ? (
             <Link to={`/match/${match.id}`}>
               <Match match={match} />
             </Link>

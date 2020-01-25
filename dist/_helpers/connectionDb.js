@@ -11,9 +11,9 @@ var _mysql = _interopRequireDefault(require("mysql"));
 
 var prodConnection = {
   host: 'eu-cdbr-west-02.cleardb.net',
-  user: 'bf6d58fc3eb263',
-  password: 'baf1a3a1',
-  database: 'heroku_830860e9211f00b'
+  user: 'bb0fcff5eb8769',
+  password: '3109bf24',
+  database: 'heroku_6b93634abffb7e6'
 };
 var localConnection = {
   host: 'localhost',
@@ -24,7 +24,12 @@ var localConnection = {
 var conectionObj = process.env.NODE_ENV === 'production' ? prodConnection : localConnection;
 exports.conectionObj = conectionObj;
 
-var connection = _mysql["default"].createConnection(localConnection);
+var connection = _mysql["default"].createConnection({
+  host: 'eu-cdbr-west-02.cleardb.net',
+  user: 'bb0fcff5eb8769',
+  password: '3109bf24',
+  database: 'heroku_6b93634abffb7e6'
+});
 
 var connect = function connect() {
   connection.connect(function (err) {

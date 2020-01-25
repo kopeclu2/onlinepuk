@@ -177,45 +177,43 @@ function () {
             fields = _ref10[1];
             err = _ref10[2];
             a = _ref10[3];
-            console.log(rows);
             arr = new Array();
             _iteratorNormalCompletion2 = true;
             _didIteratorError2 = false;
             _iteratorError2 = undefined;
-            _context2.prev = 13;
+            _context2.prev = 12;
             _iterator2 = rows[Symbol.iterator]();
 
-          case 15:
+          case 14:
             if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-              _context2.next = 38;
+              _context2.next = 36;
               break;
             }
 
             team = _step2.value;
-            console.log(team);
-            _context2.next = 20;
+            _context2.next = 18;
             return _connectionDb2.promisePool.query("SELECT * FROM teams WHERE id =?", [team.teamHome]);
 
-          case 20:
+          case 18:
             _ref11 = _context2.sent;
             _ref12 = (0, _slicedToArray2["default"])(_ref11, 1);
             teamHome = _ref12[0];
-            _context2.next = 25;
+            _context2.next = 23;
             return _connectionDb2.promisePool.query("SELECT * FROM teams WHERE id =?", [team.teamHost]);
 
-          case 25:
+          case 23:
             _ref13 = _context2.sent;
             _ref14 = (0, _slicedToArray2["default"])(_ref13, 1);
             teamHost = _ref14[0];
-            _context2.next = 30;
+            _context2.next = 28;
             return _comment["default"].getTeamsUsersComments(team.id);
 
-          case 30:
+          case 28:
             userMessages = _context2.sent;
-            _context2.next = 33;
+            _context2.next = 31;
             return _matchActions["default"].getActionsOfMatchById(team.id);
 
-          case 33:
+          case 31:
             actions = _context2.sent;
             arr.push(_objectSpread({}, team, {
               teamHome: _objectSpread({}, teamHome[0]),
@@ -224,54 +222,54 @@ function () {
               actions: actions
             }));
 
-          case 35:
+          case 33:
             _iteratorNormalCompletion2 = true;
-            _context2.next = 15;
+            _context2.next = 14;
+            break;
+
+          case 36:
+            _context2.next = 42;
             break;
 
           case 38:
-            _context2.next = 44;
-            break;
-
-          case 40:
-            _context2.prev = 40;
-            _context2.t0 = _context2["catch"](13);
+            _context2.prev = 38;
+            _context2.t0 = _context2["catch"](12);
             _didIteratorError2 = true;
             _iteratorError2 = _context2.t0;
 
-          case 44:
-            _context2.prev = 44;
-            _context2.prev = 45;
+          case 42:
+            _context2.prev = 42;
+            _context2.prev = 43;
 
             if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
               _iterator2["return"]();
             }
 
-          case 47:
-            _context2.prev = 47;
+          case 45:
+            _context2.prev = 45;
 
             if (!_didIteratorError2) {
-              _context2.next = 50;
+              _context2.next = 48;
               break;
             }
 
             throw _iteratorError2;
 
+          case 48:
+            return _context2.finish(45);
+
+          case 49:
+            return _context2.finish(42);
+
           case 50:
-            return _context2.finish(47);
-
-          case 51:
-            return _context2.finish(44);
-
-          case 52:
             res.send(arr);
 
-          case 53:
+          case 51:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[13, 40, 44, 52], [45,, 47, 51]]);
+    }, _callee2, null, [[12, 38, 42, 50], [43,, 45, 49]]);
   }));
 
   return function getAllFinsihedMatches(_x3, _x4) {
@@ -375,7 +373,13 @@ var createMatch = function createMatch(req, res) {
       date = _req$body.date,
       matchState = _req$body.matchState;
 
-  _connectionDb["default"].connection.query("INSERT INTO `matches`(name,teamHome,teamHost,scoreHome,scoreHost,date,matchState) VALUES (?,?,?,?,?,?,?)", [name, teamHome, teamHost, scoreHome, scoreHost, date, matchState], function (err, result, fields) {
+  _connectionDb["default"].connection.query("INSERT INTO matches(name,teamHome,teamHost,scoreHome,scoreHost,date,matchState,finished,stadion) VALUES (?,?,?,?,?,?,?,?,?)", [name, teamHome, teamHost, scoreHome, scoreHost, date, matchState, 0, 'DEFAULT VALUE'], function (err, result, fields) {
+    if (err) {
+      res.status(400).send({
+        message: 'Nepodařilo se přidat zápas'
+      });
+    }
+
     getAllMatches(req, res);
   });
 };
