@@ -11,7 +11,7 @@
         "start:dev": "nodemon --exec babel-node ./src/server.js",
         "start": "node dist/server.js" ,
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "concurrently \"cd client && npm run build && npm start\" \"nodemon --exec babel-node ./src/server.js\" ",
+        "dev": "concurrently \"cd frontend && npm start\" \"nodemon --exec babel-node ./src/server.js\" ",
         "build": "babel src --out-dir dist",
         "start:a": "node dist/server.js"
     },

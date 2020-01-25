@@ -10,10 +10,10 @@ exports["default"] = void 0;
 var _mysql = _interopRequireDefault(require("mysql"));
 
 var connection = _mysql["default"].createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'onlinepuk'
+  host: 'md37.wedos.net',
+  user: 'a212313_puk',
+  password: 'Monstercar494@',
+  database: 'd212313_puk'
 });
 
 var connect = function connect() {

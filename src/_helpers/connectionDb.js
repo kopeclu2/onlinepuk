@@ -2,10 +2,10 @@ import mysql from 'mysql'
 
 
 var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : '',
-    database : 'onlinepuk'
+    host     : 'eu-cdbr-west-02.cleardb.net',
+    user     : 'bf6d58fc3eb263',
+    password : 'baf1a3a1',
+    database : 'heroku_830860e9211f00b'
   });
 const connect = () => {
   connection.connect(function(err) {

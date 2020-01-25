@@ -10,10 +10,10 @@ exports.promisePool = void 0;
 var _mysql = _interopRequireDefault(require("mysql2"));
 
 var connection = _mysql["default"].createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'onlinepuk'
+  host: 'md37.wedos.net',
+  user: 'a212313_puk',
+  password: 'Monstercar494@',
+  database: 'd212313_puk'
 });
 
 var promisePool = connection.promise();
