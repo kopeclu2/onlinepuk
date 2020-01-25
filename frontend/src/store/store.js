@@ -5,8 +5,6 @@ import {routerMiddleware} from 'connected-react-router'
 import {history} from '../App'
 const initialState = {};
 const middleware = [thunk,routerMiddleware(history)];
-
-
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const enhancer = composeEnhancers(
   applyMiddleware(...middleware)
