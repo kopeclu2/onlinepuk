@@ -46,7 +46,7 @@ function () {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return _connectionDb2.promisePool.query("SELECT * FROM matches WHERE finished = 0 ORDER BY date");
+            return _connectionDb2.promisePool.query("SELECT * FROM matches ORDER BY date");
 
           case 2:
             _ref2 = _context.sent;
@@ -177,43 +177,45 @@ function () {
             fields = _ref10[1];
             err = _ref10[2];
             a = _ref10[3];
+            console.log(rows);
             arr = new Array();
             _iteratorNormalCompletion2 = true;
             _didIteratorError2 = false;
             _iteratorError2 = undefined;
-            _context2.prev = 12;
+            _context2.prev = 13;
             _iterator2 = rows[Symbol.iterator]();
 
-          case 14:
+          case 15:
             if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-              _context2.next = 36;
+              _context2.next = 38;
               break;
             }
 
             team = _step2.value;
-            _context2.next = 18;
+            console.log(team);
+            _context2.next = 20;
             return _connectionDb2.promisePool.query("SELECT * FROM teams WHERE id =?", [team.teamHome]);
 
-          case 18:
+          case 20:
             _ref11 = _context2.sent;
             _ref12 = (0, _slicedToArray2["default"])(_ref11, 1);
             teamHome = _ref12[0];
-            _context2.next = 23;
+            _context2.next = 25;
             return _connectionDb2.promisePool.query("SELECT * FROM teams WHERE id =?", [team.teamHost]);
 
-          case 23:
+          case 25:
             _ref13 = _context2.sent;
             _ref14 = (0, _slicedToArray2["default"])(_ref13, 1);
             teamHost = _ref14[0];
-            _context2.next = 28;
+            _context2.next = 30;
             return _comment["default"].getTeamsUsersComments(team.id);
 
-          case 28:
+          case 30:
             userMessages = _context2.sent;
-            _context2.next = 31;
+            _context2.next = 33;
             return _matchActions["default"].getActionsOfMatchById(team.id);
 
-          case 31:
+          case 33:
             actions = _context2.sent;
             arr.push(_objectSpread({}, team, {
               teamHome: _objectSpread({}, teamHome[0]),
@@ -222,54 +224,54 @@ function () {
               actions: actions
             }));
 
-          case 33:
+          case 35:
             _iteratorNormalCompletion2 = true;
-            _context2.next = 14;
-            break;
-
-          case 36:
-            _context2.next = 42;
+            _context2.next = 15;
             break;
 
           case 38:
-            _context2.prev = 38;
-            _context2.t0 = _context2["catch"](12);
+            _context2.next = 44;
+            break;
+
+          case 40:
+            _context2.prev = 40;
+            _context2.t0 = _context2["catch"](13);
             _didIteratorError2 = true;
             _iteratorError2 = _context2.t0;
 
-          case 42:
-            _context2.prev = 42;
-            _context2.prev = 43;
+          case 44:
+            _context2.prev = 44;
+            _context2.prev = 45;
 
             if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
               _iterator2["return"]();
             }
 
-          case 45:
-            _context2.prev = 45;
+          case 47:
+            _context2.prev = 47;
 
             if (!_didIteratorError2) {
-              _context2.next = 48;
+              _context2.next = 50;
               break;
             }
 
             throw _iteratorError2;
 
-          case 48:
-            return _context2.finish(45);
-
-          case 49:
-            return _context2.finish(42);
-
           case 50:
-            res.send(arr);
+            return _context2.finish(47);
 
           case 51:
+            return _context2.finish(44);
+
+          case 52:
+            res.send(arr);
+
+          case 53:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[12, 38, 42, 50], [43,, 45, 49]]);
+    }, _callee2, null, [[13, 40, 44, 52], [45,, 47, 51]]);
   }));
 
   return function getAllFinsihedMatches(_x3, _x4) {

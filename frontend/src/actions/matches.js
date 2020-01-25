@@ -2,8 +2,6 @@ import Axios from "axios"
 import {toast}from 'react-toastify'
 
 const loadingMatchesPending = () => ({type:'LOADING_MATCHES_PENDING'})
-const loadingMatchesFinish = () => ({type: 'LOADING_MATCHES_FINISH'})
-const loadMacthes = (matches) => ({type:'LOADING_MATCHES', payload: matches})
 
 export const loadMatches = () => (dispatch) => {
     dispatch(loadingMatchesPending())
@@ -17,8 +15,7 @@ export const loadMatches = () => (dispatch) => {
     .then(({data}) =>{
         dispatch({type:'LOADING_MATCHES_FINSIHED', payload: data})
     })
-    .catch((err) => {})
-    
+    .catch((err) => console.log(err))    
 }
 
 export const getMatchById = (id) => (dispatch) => {
