@@ -2,9 +2,9 @@ import mysql from 'mysql'
 
 const prodConnection  = {
   host     : 'eu-cdbr-west-02.cleardb.net',
-  user     : 'bf6d58fc3eb263',
-  password : 'baf1a3a1',
-  database : 'heroku_830860e9211f00b'
+  user     : 'bb0fcff5eb8769',
+  password : '3109bf24',
+  database : 'heroku_6b93634abffb7e6'
 };
 const localConnection = {
   host     : 'localhost',
@@ -13,7 +13,12 @@ const localConnection = {
   database : 'onlinepuk'
 }
 export const conectionObj = process.env.NODE_ENV ==='production' ? prodConnection : localConnection;
-var connection = mysql.createConnection(conectionObj);
+var connection = mysql.createConnection({
+  host     : 'eu-cdbr-west-02.cleardb.net',
+  user     : 'bb0fcff5eb8769',
+  password : '3109bf24',
+  database : 'heroku_6b93634abffb7e6'
+});
 const connect = () => {
   connection.connect(function(err) {
     if (err) {
