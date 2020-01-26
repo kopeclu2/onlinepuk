@@ -22,6 +22,8 @@ import { match } from "ramda";
 import { loadMatches } from "./actions/matches";
 import { connect } from "react-redux";
 import { updateAfterGoalSocket } from "./actions/Admin/updateAfterGoalSocket";
+import './css/index.css'
+import {loadTeams} from './actions/teams.js'
 const socket = openSocket.connect("http://localhost:4000");
 
 export const history = createBrowserHistory();
@@ -29,10 +31,13 @@ export const history = createBrowserHistory();
 toast.configure();
 class App extends Component {
   componentDidMount() {
+    setInterval(()=> this.props.loadMatches(),10000)
     this.props.loadMatches();
     socket.on("goal", match => {
       this.props.updateAfterGoalSocket(match);
     });
+    this.props.loadTeams()
+
   }
   render() {
     return (
@@ -56,4 +61,4 @@ class App extends Component {
   }
 }
 
-export default connect((state) => ({matchesLoaded: state.matches.matchesLoaded}), { updateAfterGoalSocket, loadMatches })(App);
+export default connect((state) => ({matchesLoaded: state.matches.matchesLoaded}), { loadTeams, updateAfterGoalSocket, loadMatches })(App);

@@ -2,3 +2,42 @@
 a {
     text-decoration: none;
 }
+li {
+    list-style-type: none;
+}
+.pagination {
+    display: flex;
+    padding: 0;
+    justify-content: center;
+}
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+}
+.pagination li:hover {
+    cursor: pointer;
+}
+li.active a {
+    background-color: #1976d2;
+    color: white;
+}
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+.pagination a:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.pagination a:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}

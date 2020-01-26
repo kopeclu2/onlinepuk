@@ -12,13 +12,14 @@ const localConnection = {
   password : '',
   database : 'onlinepuk'
 }
-export const conectionObj = process.env.NODE_ENV ==='production' ? prodConnection : localConnection;
-var connection = mysql.createConnection({
+const herokuOnlinePuk2 = {
   host     : 'eu-cdbr-west-02.cleardb.net',
   user     : 'bb0fcff5eb8769',
   password : '3109bf24',
   database : 'heroku_6b93634abffb7e6'
-});
+}
+export const conectionObj = process.env.NODE_ENV ==='production' ? prodConnection : localConnection;
+var connection = mysql.createConnection(localConnection);
 const connect = () => {
   connection.connect(function(err) {
     if (err) {

@@ -13,3 +13,8 @@ export const editingMatchOpen = (id) => ({
 export const editingMatchClose = () => ({
     type: 'EDIT_MATCH_ClOSE'
 })
+
+export const setCurrentPagePaginationFinished = (pageNumber) => ({
+    type: 'SET_CURRENT_PAGE_PAGINATION_FINISHED',
+    payload:pageNumber
+})
