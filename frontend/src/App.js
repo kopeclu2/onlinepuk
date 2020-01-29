@@ -23,8 +23,10 @@ import { loadMatches } from "./actions/matches";
 import { connect } from "react-redux";
 import { updateAfterGoalSocket } from "./actions/Admin/updateAfterGoalSocket";
 import { liveSuccessMatch } from "./actions/Admin/liveSuccessmatch.js";
+import { finishedMatch } from "./actions/Admin/finishedSuccess.js";
 import "./css/index.css";
 import { loadTeams } from "./actions/teams.js";
+import {loadUserFromToken} from './actions/loadUserFromToken.js'
 const socket = openSocket.connect("http://localhost:4000");
 
 export const history = createBrowserHistory();
@@ -32,6 +34,7 @@ export const history = createBrowserHistory();
 toast.configure();
 class App extends Component {
   componentDidMount() {
+    this.props.loadUserFromToken()
     setInterval(() => this.props.loadMatches(), 10000);
     this.props.loadMatches();
     socket.on("goal", match => {
@@ -39,6 +42,9 @@ class App extends Component {
     });
     socket.on("liveSucces", match => {
       this.props.liveSuccessMatch(match);
+    });
+    socket.on("finishedSuccess", match => {
+      this.props.finishedMatch(match);
     });
     this.props.loadTeams();
   }
@@ -70,5 +76,5 @@ class App extends Component {
 
 export default connect(
   state => ({ matchesLoaded: state.matches.matchesLoaded }),
-  { liveSuccessMatch, loadTeams, updateAfterGoalSocket, loadMatches }
+  { liveSuccessMatch, loadTeams, updateAfterGoalSocket,loadUserFromToken, finishedMatch, loadMatches }
 )(App);

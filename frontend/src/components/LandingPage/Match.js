@@ -3,12 +3,13 @@ import {
   Card,
   makeStyles,
   Grid,
-  Paper,
   Avatar,
   Typography
 } from "@material-ui/core";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import moment from "moment";
 import "moment/locale/cs";
+import { useTheme } from '@material-ui/core/styles';
 const useStyles = makeStyles(theme => ({
   '@keyframes blinker': {
     from: {opacity: 1},
@@ -36,6 +37,8 @@ const Match = ({ match }) => {
     display: "flex",
     justifyContent: "center"
   };
+  const theme = useTheme();
+  const xs = useMediaQuery(theme.breakpoints.down('sm'));
   const materialClasses = useStyles();
   let time = moment(match.date).format("llll");
   return (
@@ -51,7 +54,6 @@ const Match = ({ match }) => {
         <Grid item xs style={classes}>
           <Grid
             container
-            xs
             style={classes}
             direction="column"
             justify="center"
@@ -64,9 +66,9 @@ const Match = ({ match }) => {
               justify="center"
               alignItems="center"
             >
-              <Typography variant={"h2"}>{match.scoreHome}</Typography>
+              <Typography variant={"h2"}>{match.live === 0 && match.finished === 0 ? <div style={{marginRight: "15px"}}>{xs  ?'-'  : '—' }</div> :match.scoreHome}</Typography>
               <Typography variant={"h2"}>:</Typography>
-              <Typography variant={"h2"}>{match.scoreHost}</Typography>
+              <Typography variant={"h2"}>{match.live === 0 && match.finished === 0 ? <div style={{marginLeft: "15px"}}>{xs  ? '-'  : '—' }</div> :match.scoreHost}</Typography>
             </Grid>
             {match.live === 1 && (
               <Grid item>
@@ -98,7 +100,7 @@ const Match = ({ match }) => {
         </Grid>
         <Grid item xs={4} style={classes}>
           <Typography
-            variant={"h7"}
+            variant={"body1"}
             className={materialClasses.teamsText}
             style={{ alignItems: "center" }}
           >

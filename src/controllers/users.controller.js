@@ -8,9 +8,17 @@ import Role from '../_helpers/role'
 router.post('/authenticate', authenticate);     // public route
 router.get('/', authorize(Role.Admin), getAll); // admin only
 router.get('/:id', authorize(), getById);
-router.post('/signup', signup)       // all authenticated users
+router.post('/signup', signup)  
+router.post('/check', checkToken) 
+router.post('/get/user/from/token', getUserFromToken)     // all authenticated users
 export default router;
 
+function getUserFromToken(req,res) {
+    userService.getUserFromToken(req,res);
+} 
+function checkToken(req,res,next) {
+    userService.checkValidToken(req,res)
+}
 function signup(req,res,next) {
     userService.signUp(req.body)
     .then((result) => authenticate(req,res,next))

@@ -16,7 +16,9 @@ const ActionsMap = ({ match, loadInitDataAction, deleteActionMatch }) => {
       <Paper
         style={{
           width: "100%",
-          height: "40px",
+          height: "fit-content",
+          paddingTop:'5px',
+          paddingBottom:'5px',
           display: "flex",
           alignItems: "center"
         }}
@@ -54,7 +56,7 @@ const ActionsMap = ({ match, loadInitDataAction, deleteActionMatch }) => {
         </IconButton>
 
         <IconButton color="secondary" >
-          <DeleteIcon onClick={()=> deleteActionMatch(action)}/>
+          <DeleteIcon onClick={()=>window.confirm('Opravdu smazat ?') && deleteActionMatch(action)}/>
         </IconButton>
       </Paper>
     </div>

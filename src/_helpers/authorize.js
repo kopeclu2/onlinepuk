@@ -16,8 +16,10 @@ function authorize(roles = []) {
 
         // authorize based on user role
         (req, res, next) => {
+            console.log(res.user)
             if (roles.length && !roles.includes(req.user.role)) {
                 // user's role is not authorized
+                
                 return res.status(401).json({ message: 'Nemáte dostatečná práva ! ' });
             }
 

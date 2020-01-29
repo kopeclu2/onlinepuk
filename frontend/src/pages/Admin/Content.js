@@ -11,6 +11,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { connect } from "react-redux";
 import DeleteIcon from "@material-ui/icons/Delete";
+import MapMatchesForEdit from '../../components/Admin/MapMatchesForEdit.js'
 import {
   MenuItem,
   Divider,
@@ -67,6 +68,9 @@ const styles = theme => ({
     [theme.breakpoints.down("sm")]: {
       display: "none"
     }
+  },
+  greenDot: {
+    color: 'green'
   }
 });
 
@@ -141,69 +145,7 @@ function Content({
           <CreateMatch />
         ) : (
           <div>
-            {matches.map(
-              ({
-                teamHome,
-                teamHost,
-                scoreHome,
-                scoreHost,
-                id,
-                date,
-                live
-              }) => (
-                <div>
-                  <MenuItem>
-                    <Grid container>
-                      <Grid item xs={0} sm={2} className={classes.noVisible}>
-                        {teamHome.nazev}
-                      </Grid>
-                      <Grid item xs={3} sm={1}>
-                        <Avatar src={teamHome.img} />
-                      </Grid>
-                      <Grid item xs={2} sm={1}>
-                        {scoreHome}:{scoreHost}
-                      </Grid>
-                      <Grid item xs={3} sm={1}>
-                        <Avatar src={teamHost.img} />
-                      </Grid>
-                      <Grid item xs={2} sm={2} className={classes.noVisible}>
-                        {teamHost.nazev}
-                      </Grid>
-                      <Grid item xs={0} sm={2}>
-                        {moment(date).format("llll")}
-                      </Grid>
-                      <Grid item xs={0} sm={1}>
-                        {live === 1 && (
-                          <div
-                            className={classes.blinkingText}
-                            style={{ textAlign: "center" }}
-                          >
-                            ●
-                          </div>
-                        )}
-                      </Grid>
-                      <Grid item xs={1} sm={1}>
-                        <IconButton color="primary">
-                          <EditIcon onClick={() => editingMatchOpen(id)} />
-                        </IconButton>
-                      </Grid>
-                      <Grid item xs={1} sm={1}>
-                        <IconButton
-                          color="secondary"
-                          onClick={() =>
-                            window.confirm("Opravdu odstranit zápas ? ") &&
-                            deleteMatch(id)
-                          }
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Grid>
-                    </Grid>
-                  </MenuItem>
-                  <Divider />
-                </div>
-              )
-            )}
+            <MapMatchesForEdit matches={matches} deleteMatch={deleteMatch} editingMatchOpen={editingMatchOpen} classes={classes}/>
           </div>
         )}
       </div>

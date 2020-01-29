@@ -62,5 +62,5 @@ export const updateMatchInfo = (id) => (dispatch,getState) => {
             toast('✅ Zapas Editovan', { hideProgressBar: true});
         }
     })
-    .then((res) => console.log(res))
+    .catch((err) => {console.log('asddas') })
 }

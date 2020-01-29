@@ -21,6 +21,7 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import faulsTypes from '../../../utils/faulTypes.js'
 const useStyles = makeStyles(theme => ({
   teamsText: {
     color: theme.palette.text.secondary,
@@ -44,6 +45,7 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
   const [content, setcontent] = useState("");
   const [actionID, setActionID] = useState(0);
   const [editing, setEditing] = useState(false);
+  const [faulTypes, setFaulType] = useState(0)
 
   const loadInitDataAction = action => {
     setteamHomeOrHost(action.teamHomeOrHost);
@@ -53,6 +55,7 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
     setcontent(action.content);
     setActionID(action.matchactions_id);
     setEditing(true);
+    setFaulType(action.faulType)
   };
 
   const clearForm = () => {
@@ -63,6 +66,7 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
     setcontent("");
     setActionID(0);
     setEditing(false);
+    setFaulType(0)
   };
   return (
     <div>
@@ -87,7 +91,7 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
             spacing={0}
             style={{ marginTop: "10px" }}
           >
-            <Grid item xs={8} md={3}>
+            <Grid item xs={4} md={2}>
               <Select
                 variant={"outlined"}
                 type={"text"}
@@ -126,6 +130,21 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
                 size="small"
               >
                 {values(matchActions).map((action, index) => (
+                  <MenuItem value={index}>{action}</MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid item xs={4} md={3}>
+              <Select
+                value={faulTypes}
+                variant={"outlined"}
+                type={"text"}
+                label={"Typ"}
+                onChange={e => setFaulType(e.target.value)}
+                fullWidth
+                size="small"
+              >
+                {values(faulsTypes).map((action, index) => (
                   <MenuItem value={index}>{action}</MenuItem>
                 ))}
               </Select>
@@ -176,6 +195,7 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
                         content,
                         type,
                         match_id: match.id,
+                        faulTypes,
                         matchactions_id: actionID
                       })
                     : createActionMatch({
@@ -184,6 +204,7 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
                         seconds,
                         content,
                         type,
+                        faulTypes,
                         match_id: match.id
                       });
                   clearForm();

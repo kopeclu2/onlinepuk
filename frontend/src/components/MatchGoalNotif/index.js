@@ -28,7 +28,8 @@ const MatchGoalNotification = ({
   matchId,
   match: { teamHome, teamHost, scoreHome, scoreHost },
   live,
-  goal
+  goal,
+  finished
 }) => {
   const classes = useStyles();
   return (
@@ -48,9 +49,10 @@ const MatchGoalNotification = ({
         style={{ textAlign: "center" }}
         xs={12}
       >
-        <Typography variant={"h5"} color={"secondary"} className={classes.blinkingText}>
+        <Typography variant={"h5"} color={"secondary"} className={!finished && classes.blinkingText}>
          {live && 'Zápas začal'}
          {goal && 'GÓL'} 
+         {finished && 'KONEC'}
         </Typography>
       </Grid>
       <Grid item xs={3} sm={3}>

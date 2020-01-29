@@ -33,7 +33,7 @@ const NavigationBar = ({ history, user }) => {
       <AppBar position="static" color="primary" className={classes.appBar}>
         <Toolbar>
           <Link to="/">
-            <Typography variant="h6" color={'white'} className={classes.title}>
+            <Typography variant="h6" className={classes.title}>
               Onlajny - OLLH
             </Typography>
           </Link>

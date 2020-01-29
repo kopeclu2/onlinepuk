@@ -1,7 +1,10 @@
 import React from "react";
 import { Paper, Grid, Typography } from "@material-ui/core";
 import matchActions from "../../utils/matchActions";
-const MatchActionHome = ({ action: { time, seconds, content,type } }) => {
+import faulTypes from "../../utils/faulTypes";
+const MatchActionHome = ({
+  action: { time, seconds, content, type, faulType }
+}) => {
   const classes = {
     alignItems: "center"
   };
@@ -22,21 +25,29 @@ const MatchActionHome = ({ action: { time, seconds, content,type } }) => {
           direction="row"
           justify="center"
           alignItems="center"
-          xs={2} md={1}
+          xs={2}
+          md={1}
         >
           <Typography variant={"body1"}>{time}</Typography>
           <Typography variant={"body1"}>:</Typography>
           <Typography variant={"body1"}>{seconds}</Typography>
         </Grid>
-        <Grid container
+        <Grid
+          container
           direction="row"
           justify="center"
           alignItems="center"
-          xs={1} md={1}>
-            {matchActions[type]}
+          xs={1}
+          md={1}
+        >
+          {matchActions[type]}
         </Grid>
-        <Grid item xs={9} >
-            <Typography variant={"body1"}>{content}</Typography>
+        <Grid container
+          direction="row" alignItems="center" xs={9}>
+          <Typography
+            variant={"body1"}
+          >{content}</Typography>
+          {faulType !== 0 && <p style={{fontSize: '0.8rem', color: 'darkgray',paddingLeft:'5px'}}>{`( ${faulTypes[faulType]} )`}</p> }    
         </Grid>
       </Grid>
     </Paper>

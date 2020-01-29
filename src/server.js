@@ -88,7 +88,7 @@ io.on('connection', function (socket) {
         db.connection.query('SELECT id, role from users WHERE id = ? ', [decoded.sub], (err,result) => {
           if(result[0].role === 'Admin'){
             matchesService.setMatchFinished(match,finishedValue)
-            .then(()=> {})
+            .then(()=> finishedValue && socket.broadcast.emit('finishedSuccess', {match}))
             .catch(() => {})
           }
         })

@@ -1,7 +1,10 @@
 import React from "react";
 import { Paper, Grid, Typography } from "@material-ui/core";
 import matchActions from "../../utils/matchActions";
-const MatchActionHost = ({ action: { time, seconds, content,type } }) => {
+import faulTypes from "../../utils/faulTypes";
+const MatchActionHost = ({
+  action: { time, seconds, content, type, faulType }
+}) => {
   const classes = {
     alignItems: "center"
   };
@@ -12,26 +15,45 @@ const MatchActionHost = ({ action: { time, seconds, content,type } }) => {
         height: "40px",
         display: "flex",
         alignItems: "center"
-      }}
-    >
+      }}>
       <Grid container md={12} xs={12} style={classes} justify="flex-end">
-        <Grid item xs={5} style={{textAlign: 'right'}} >
-             <Typography variant={"body1"}>{content}</Typography>
-        </Grid>
-        <Grid container
+        <Grid
+          container
           direction="row"
-          justify="center"
-          alignItems="center"
-          xs={1} md={1}>
-            {matchActions[type]}
+          alignItems={"center"}
+          xs={9}
+          style={{ textAlign: "right" }}
+          justify="flex-end"
+        >
+          {faulType !== 0 && (
+            <p
+              style={{
+                fontSize: "0.8rem",
+                color: "darkgray",
+                paddingRight: "5px"
+              }}
+            >{`( ${faulTypes[faulType]} )`}</p>
+          )}
+          <Typography variant={"body1"}>{content}</Typography>
         </Grid>
-       
         <Grid
           container
           direction="row"
           justify="center"
           alignItems="center"
-          xs={2} md={1}
+          xs={1}
+          md={1}
+        >
+          {matchActions[type]}
+        </Grid>
+
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          xs={2}
+          md={1}
         >
           <Typography variant={"body1"}>{time}</Typography>
           <Typography variant={"body1"}>:</Typography>

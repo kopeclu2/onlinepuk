@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect,useState} from "react";
 import PropTypes from "prop-types";
 import {
   createMuiTheme,
@@ -12,7 +12,10 @@ import Link from "@material-ui/core/Link";
 import Navigator from "./Navigator";
 import Content from "./Content";
 import Header from "./Header";
-
+import {push} from 'connected-react-router'
+import {connect} from 'react-redux'
+import { Route, Redirect } from "react-router-dom";
+import {toast} from 'react-toastify'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -169,34 +172,63 @@ const styles = {
 };
 
 function Paperbase(props) {
-  const { classes } = props;
+  const { classes, push } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const [redirect,setRedirect] = useState(false)
+  const [loading,setLoading] = useState(true)
+  useEffect(()=>{
+    fetch(`http://localhost:4000/users/check`, {
+        method: "POST",
+        body: JSON.stringify({ token: localStorage.getItem("token") }),
 
-  return (
-    <ThemeProvider theme={theme}>
-      <div className={classes.root}>
-        <CssBaseline />
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => {
+          if (res.status === 200) {
+            setLoading(false)
+            return res.json();
+          } else {
+            throw new Error();
+          }
+        })
+        .catch((err) => {console.log(err.text()); toast.warn('Něco se nezdařilo'); setRedirect(true)});
+  },[])
 
-        <div className={classes.app}>
-          {/*<Header onDrawerToggle={handleDrawerToggle} />*/ }
-          <main className={classes.main}>
-            <Content />
-          </main>
-          <footer className={classes.footer}>
-            <Copyright />
-          </footer>
+  if (redirect) return <Redirect to={{ pathname: "/login", state: { from: props.location } }} />
+  if(loading){
+    return null
+  }else {
+    return (
+      <ThemeProvider theme={theme}>
+        <div className={classes.root}>
+          <CssBaseline />
+  
+          <div className={classes.app}>
+            <main className={classes.main}>
+              <Content />
+            </main>
+            <footer className={classes.footer}>
+              <Copyright />
+            </footer>
+          </div>
         </div>
-      </div>
-    </ThemeProvider>
-  );
+      </ThemeProvider>
+    );
+  }
+
+  
 }
 
 Paperbase.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Paperbase);
+export default connect(()=>({}),{push})(withStyles(styles)(Paperbase));

@@ -30,4 +30,5 @@ export const login = (username,password) => (dispatch) => {
 export const logout = () => (dispatch) => {
     dispatch({type: 'LOGOUT'})
     dispatch(push('/'))
+    localStorage.removeItem('token')
 }

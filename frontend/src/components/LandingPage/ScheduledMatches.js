@@ -21,7 +21,7 @@ const ScheduledMatches = ({
     </Typography>
     {!isEmpty(liveMatches) ? (
       liveMatches.map(match => (
-        <Link to={`/match/${match.id}`}>
+        <Link to={`/match/${match.id}`}key={match.id}>
           <Match match={match} />
         </Link>
       ))

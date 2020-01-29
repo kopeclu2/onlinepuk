@@ -63,7 +63,7 @@ export default socketConnect(
     state => ({
       teams: state.teams.allTeams,
       matches: state.matches.matches,
-      pageNumbers: Math.ceil(state.matches.matches.length / 5)
+      pageNumbers: Math.ceil(state.matches.finishedMatches.length / 4)
     }),
     { loadTeams, loadMatches, setCurrentPagePaginationFinished }
   )(LandingPage)
