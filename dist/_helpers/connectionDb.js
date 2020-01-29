@@ -21,15 +21,16 @@ var localConnection = {
   password: '',
   database: 'onlinepuk'
 };
-var conectionObj = process.env.NODE_ENV === 'production' ? prodConnection : localConnection;
-exports.conectionObj = conectionObj;
-
-var connection = _mysql["default"].createConnection({
+var herokuOnlinePuk2 = {
   host: 'eu-cdbr-west-02.cleardb.net',
   user: 'bb0fcff5eb8769',
   password: '3109bf24',
   database: 'heroku_6b93634abffb7e6'
-});
+};
+var conectionObj = process.env.NODE_ENV === 'production' ? prodConnection : localConnection;
+exports.conectionObj = conectionObj;
+
+var connection = _mysql["default"].createConnection(localConnection);
 
 var connect = function connect() {
   connection.connect(function (err) {

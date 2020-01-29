@@ -111,7 +111,30 @@ const createMatch = (req, res) => {
     }
   );
 };
+const setLiveMatch = (match,liveValue) => (new Promise((res,rej) => {
+  const value = liveValue ? 1 : 0;
+  console.log(value, match.id)
+    db.connection.query('UPDATE matches SET live = ? WHERE id = ?',[value,match.id], (err,result) => {
+      if(err) {
+        console.log(err)
+        rej()
+      } else{
+        res()
+      }
+    })
+}))
 
+const setMatchFinished = (match, finshedvalue) => (new Promise((res,rej) => {
+  const value = finshedvalue ? 1 : 0;
+  db.connection.query('UPDATE matches SET finished = ?, live = ? WHERE id = ?',[value,0,match.id], (err,result) => {
+    if(err) {
+      console.log(err)
+      rej()
+    } else{
+      res()
+    }
+  })
+}))
 const editMatch = (req, res) => {
   const id = parseInt(req.params.id);
   const {
@@ -120,16 +143,20 @@ const editMatch = (req, res) => {
     scoreHome,
     date,
     matchState,
-    stadion
+    stadion,
+    live,
+    finished
   } = req.body;
 
   if (isEmpty(req.body)) {
     res.status(400).json({ message: "Prazdna body" });
     return;
   }
+  const liveValue = live ? 1 :0;
+  const finishedValue  = finished ? 1 : 0;
   db.connection.query(
-    "UPDATE `matches` SET name = ?, scoreHome = ?, scoreHost = ?, date = ?, matchState = ?, stadion = ?  WHERE id= ? ",
-    [name, scoreHome, scoreHost, date, matchState,stadion, id],
+    "UPDATE `matches` SET name = ?, scoreHome = ?, scoreHost = ?, date = ?, matchState = ?, stadion = ?, live = ?, finished = ?   WHERE id= ? ",
+    [name, scoreHome, scoreHost, date, matchState,stadion,liveValue, finishedValue, id],
     (err, result, fields) => {
       res.status(200).json({ message: "Zapas byl uspesne editovan" });
     }
@@ -173,5 +200,7 @@ export default {
   editMatch,
   editMatchScore,
   getMatch,
-  getAllFinsihedMatches
+  getAllFinsihedMatches,
+  setLiveMatch,
+  setMatchFinished
 };

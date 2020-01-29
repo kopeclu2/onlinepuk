@@ -1,6 +1,7 @@
 const initialState = {
   addMatchBool: false,
   paginationCurrentPageFinished: 0,
+  paginationCurrentPageScheduled: 0,
   editingMatch: {
     bool: false,
     id: null
@@ -42,6 +43,11 @@ export default function(state = initialState, action) {
       ...state,
       paginationCurrentPageFinished: action.payload
     }
+    case 'SET_CURRENT_PAGE_PAGINATION_SCHEDULED':
+      return {
+        ...state,
+        paginationCurrentPageScheduled: action.payload
+      }
     default:
       return state;
   }

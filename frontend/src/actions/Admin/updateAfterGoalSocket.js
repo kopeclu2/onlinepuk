@@ -13,7 +13,7 @@ export const updateAfterGoalSocket = match => (dispatch, getStore) => {
   const audio = new Audio(Horn)
   audio.play()
  
-  toast(<MatchGoalNotification match={findedMatch} />, {
+  toast(<MatchGoalNotification match={findedMatch} goal />, {
     position: "bottom-left",
     autoClose: 10000,
     hideProgressBar: true,

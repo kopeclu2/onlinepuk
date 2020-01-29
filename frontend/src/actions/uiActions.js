@@ -18,3 +18,7 @@ export const setCurrentPagePaginationFinished = (pageNumber) => ({
     type: 'SET_CURRENT_PAGE_PAGINATION_FINISHED',
     payload:pageNumber
 })
+export const setCurrentPagePaginationScheduled = (pageNumber) => ({
+    type: 'SET_CURRENT_PAGE_PAGINATION_SCHEDULED',
+    payload:pageNumber
+})

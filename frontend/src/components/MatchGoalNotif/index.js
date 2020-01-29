@@ -26,7 +26,9 @@ const useStyles = makeStyles(theme => ({
 const MatchGoalNotification = ({
   closeToast,
   matchId,
-  match: { teamHome, teamHost, scoreHome, scoreHost }
+  match: { teamHome, teamHost, scoreHome, scoreHost },
+  live,
+  goal
 }) => {
   const classes = useStyles();
   return (
@@ -47,7 +49,8 @@ const MatchGoalNotification = ({
         xs={12}
       >
         <Typography variant={"h5"} color={"secondary"} className={classes.blinkingText}>
-          GÓL
+         {live && 'Zápas začal'}
+         {goal && 'GÓL'} 
         </Typography>
       </Grid>
       <Grid item xs={3} sm={3}>

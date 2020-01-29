@@ -384,6 +384,23 @@ var createMatch = function createMatch(req, res) {
   });
 };
 
+var setLiveMatch = function setLiveMatch(match, liveValue) {
+  return new Promise(function (res, rej) {
+    var value = liveValue ? 1 : 0;
+    var negValue = value === 0 ? 1 : 0;
+    console.log(negValue, value);
+
+    _connectionDb["default"].connection.query('UPDATE matches SET live = ?, finished = ? WHERE id = ?', [value, negValue, match.id], function (err, result) {
+      if (err) {
+        console.log(err);
+        rej();
+      } else {
+        res();
+      }
+    });
+  });
+};
+
 var editMatch = function editMatch(req, res) {
   var id = parseInt(req.params.id);
   var _req$body2 = req.body,
@@ -447,6 +464,7 @@ var _default = {
   editMatch: editMatch,
   editMatchScore: editMatchScore,
   getMatch: getMatch,
-  getAllFinsihedMatches: getAllFinsihedMatches
+  getAllFinsihedMatches: getAllFinsihedMatches,
+  setLiveMatch: setLiveMatch
 };
 exports["default"] = _default;

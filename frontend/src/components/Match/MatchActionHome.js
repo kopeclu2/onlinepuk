@@ -9,7 +9,9 @@ const MatchActionHome = ({ action: { time, seconds, content,type } }) => {
     <Paper
       style={{
         width: "100%",
-        height: "40px",
+        height: "fit-content",
+        paddingTop: "8px",
+        paddingBottom: "8px",
         display: "flex",
         alignItems: "center"
       }}
@@ -33,7 +35,7 @@ const MatchActionHome = ({ action: { time, seconds, content,type } }) => {
           xs={1} md={1}>
             {matchActions[type]}
         </Grid>
-        <Grid item xs={3} >
+        <Grid item xs={9} >
             <Typography variant={"body1"}>{content}</Typography>
         </Grid>
       </Grid>

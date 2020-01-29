@@ -49,13 +49,14 @@ const FirstRowInfo = ({ match, scoreGoalSocket }) => {
           component={TextFieldNumber}
           className={classes.textFieldWidth}
           parse={Number}
+          onBlur={(e) => JSON.parse(localStorage.getItem("LIVE_NOTIF")) && scoreGoalSocket() }
         />
         <Typography variant={"h2"}>:</Typography>
         <Field
           name="scoreHost"
           component={TextFieldNumber}
           className={classes.textFieldWidth}
-          onBlur={(e) => scoreGoalSocket() }
+          onBlur={(e) => JSON.parse(localStorage.getItem("LIVE_NOTIF")) && scoreGoalSocket() }
           parse={Number}
         />
       </Grid>

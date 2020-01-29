@@ -182,7 +182,7 @@ function Paperbase(props) {
         <CssBaseline />
 
         <div className={classes.app}>
-          <Header onDrawerToggle={handleDrawerToggle} />
+          {/*<Header onDrawerToggle={handleDrawerToggle} />*/ }
           <main className={classes.main}>
             <Content />
           </main>

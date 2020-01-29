@@ -12,8 +12,7 @@ class Matches extends Component {
     this.props.loadMatches();
   }
   render() {
-    const { matches, matchesFinished, finished } = this.props;
-    console.log("MATCH", matches);
+    const { matches, matchesFinished, finished, matchesScheduled,pageNumbersScheduled } = this.props;
     return (
       <div >
         {matches ? (
@@ -25,13 +24,11 @@ class Matches extends Component {
               </Link>
             ))
           ) : (
-            matches &&  
-            matches.map((match, index) =>
-              index === 0 ? null : (match.finished === 0 && match.live === 0) ? (
+            matchesScheduled &&  
+            matchesScheduled.map((match, index) =>
                 <Link to={`/match/${match.id}`}>
                   <Match match={match} />
                 </Link>
-              ) : null
             )
           )
         ) : (
@@ -48,22 +45,24 @@ class Matches extends Component {
     );
   }
 }
-const pagination = () => {};
 export default connect(
   state => {
     const postsPerPage = 4;
     const currentPage = state.ui.paginationCurrentPageFinished + 1;
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const matchesPag = state.matches.matches.slice(
-      indexOfFirstPost,
-      indexOfLastPost
-    );
     const matchesFin = state.matches.finishedMatches.slice(
       indexOfFirstPost,
       indexOfLastPost
     );
+    const postsPerPageScheduled = 3 ;
+    const currentPageScheduled = state.ui.paginationCurrentPageScheduled + 1;
+    const indexOfLastPostScheduled = currentPageScheduled * postsPerPageScheduled;
+    const indexOfFirstPostScheduled = indexOfLastPostScheduled - postsPerPageScheduled;
+    const matchesScheduledAll = state.matches.matches.filter((match,index) => match.finished === 0 && match.live === 0 )
+    const matchesScheduled = matchesScheduledAll.slice(indexOfFirstPostScheduled,indexOfLastPostScheduled)
     return {
+      matchesScheduled,
       matches: state.matches.matches,
       matchesFinished: matchesFin,
       loading: state.matches.matchesLoading

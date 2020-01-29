@@ -11,7 +11,16 @@ import EditIcon from "@material-ui/icons/Edit";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { connect } from "react-redux";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { MenuItem, Divider, Avatar, Fab, IconButton } from "@material-ui/core";
+import {
+  MenuItem,
+  Divider,
+  Avatar,
+  Fab,
+  IconButton,
+  Checkbox,
+  FormControlLabel,
+  Switch
+} from "@material-ui/core";
 import { loadMatches } from "../../actions/matches";
 import { deleteMatch } from "../../actions/matches";
 import {
@@ -21,8 +30,19 @@ import {
   editingMatchClose
 } from "../../actions/uiActions";
 import EditingMatch from "../../components/Admin/EditingMatch";
-import moment from 'moment'
+import moment from "moment";
 const styles = theme => ({
+  "@keyframes blinker": {
+    from: { opacity: 1 },
+    to: { opacity: 0 }
+  },
+  blinkingText: {
+    animationName: "$blinker",
+    animationDuration: "1s",
+    animationTimingFunction: "linear",
+    animationIterationCount: "infinite",
+    color: "red"
+  },
   paper: {
     maxWidth: 936,
     margin: "auto",
@@ -103,6 +123,15 @@ function Content({
               )}
             </Grid>
           </Grid>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={JSON.parse(localStorage.getItem('LIVE_NOTIF'))}
+                onChange={(event) => localStorage.setItem('LIVE_NOTIF', event.target.checked)}
+              />
+            }
+            label="Editovat s norifikacemi ? "
+          />
         </Toolbar>
       </AppBar>
       <div className={classes.contentWrapper}>
@@ -112,46 +141,69 @@ function Content({
           <CreateMatch />
         ) : (
           <div>
-            {matches.map(({ teamHome, teamHost, scoreHome, scoreHost, id, date }) => (
-              <div>
-                <MenuItem>
-                  <Grid container>
-                    <Grid item xs={0} sm={2} className={classes.noVisible}>
-                      {teamHome.nazev}
+            {matches.map(
+              ({
+                teamHome,
+                teamHost,
+                scoreHome,
+                scoreHost,
+                id,
+                date,
+                live
+              }) => (
+                <div>
+                  <MenuItem>
+                    <Grid container>
+                      <Grid item xs={0} sm={2} className={classes.noVisible}>
+                        {teamHome.nazev}
+                      </Grid>
+                      <Grid item xs={3} sm={1}>
+                        <Avatar src={teamHome.img} />
+                      </Grid>
+                      <Grid item xs={2} sm={1}>
+                        {scoreHome}:{scoreHost}
+                      </Grid>
+                      <Grid item xs={3} sm={1}>
+                        <Avatar src={teamHost.img} />
+                      </Grid>
+                      <Grid item xs={2} sm={2} className={classes.noVisible}>
+                        {teamHost.nazev}
+                      </Grid>
+                      <Grid item xs={0} sm={2}>
+                        {moment(date).format("llll")}
+                      </Grid>
+                      <Grid item xs={0} sm={1}>
+                        {live === 1 && (
+                          <div
+                            className={classes.blinkingText}
+                            style={{ textAlign: "center" }}
+                          >
+                            ●
+                          </div>
+                        )}
+                      </Grid>
+                      <Grid item xs={1} sm={1}>
+                        <IconButton color="primary">
+                          <EditIcon onClick={() => editingMatchOpen(id)} />
+                        </IconButton>
+                      </Grid>
+                      <Grid item xs={1} sm={1}>
+                        <IconButton
+                          color="secondary"
+                          onClick={() =>
+                            window.confirm("Opravdu odstranit zápas ? ") &&
+                            deleteMatch(id)
+                          }
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={3} sm={1}>
-                      <Avatar src={teamHome.img} />
-                    </Grid>
-                    <Grid item xs={2} sm={1}>
-                      {scoreHome}:{scoreHost}
-                    </Grid>
-                    <Grid item xs={3} sm={1}>
-                      <Avatar src={teamHost.img} />
-                    </Grid>
-                    <Grid item xs={2} sm={2} className={classes.noVisible}>
-                      {teamHost.nazev}
-                    </Grid>
-                    <Grid item xs={0} sm={3}>
-                      {moment(date).format('llll')}
-                    </Grid>
-                    <Grid item xs={1} sm={1}>
-                      <IconButton color="primary">
-                        <EditIcon onClick={() => editingMatchOpen(id)} />
-                      </IconButton>
-                    </Grid>
-                    <Grid item xs={1} sm={1}>
-                      <IconButton
-                        color="secondary"
-                        onClick={() => deleteMatch(id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                </MenuItem>
-                <Divider />
-              </div>
-            ))}
+                  </MenuItem>
+                  <Divider />
+                </div>
+              )
+            )}
           </div>
         )}
       </div>
@@ -169,5 +221,12 @@ export default connect(
     addMatch: state.ui.addMatchBool,
     editMatch: state.ui.editingMatch.bool
   }),
-  { loadMatches, editingMatchOpen,editingMatchClose, deleteMatch, addMatchOpen, addMatchClose }
+  {
+    loadMatches,
+    editingMatchOpen,
+    editingMatchClose,
+    deleteMatch,
+    addMatchOpen,
+    addMatchClose
+  }
 )(withStyles(styles)(Content));

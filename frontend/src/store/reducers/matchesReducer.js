@@ -27,6 +27,17 @@ const matchesReducer = (state = initialState , {payload, type}) => {
                 ...state,
                 matches: [...payload]
               }
+        case 'SET_LIVE_MATCH': 
+        const liveMatchfinded = state.matches.find((match) => match.id === payload)
+        const liveUpdated = {
+            ...liveMatchfinded,
+            live:1
+        }
+        const newMatchesLive = state.matches.map((match) => match.id === payload ? liveUpdated : match)
+              return {
+                  ...state,
+                  matches: newMatchesLive
+              }
         case 'DELETE_MATCH': 
             const newMatches = state.matches.filter((match) => match.id !== payload)
              return {

@@ -22,8 +22,9 @@ import { match } from "ramda";
 import { loadMatches } from "./actions/matches";
 import { connect } from "react-redux";
 import { updateAfterGoalSocket } from "./actions/Admin/updateAfterGoalSocket";
-import './css/index.css'
-import {loadTeams} from './actions/teams.js'
+import { liveSuccessMatch } from "./actions/Admin/liveSuccessmatch.js";
+import "./css/index.css";
+import { loadTeams } from "./actions/teams.js";
 const socket = openSocket.connect("http://localhost:4000");
 
 export const history = createBrowserHistory();
@@ -31,13 +32,15 @@ export const history = createBrowserHistory();
 toast.configure();
 class App extends Component {
   componentDidMount() {
-    setInterval(()=> this.props.loadMatches(),10000)
+    setInterval(() => this.props.loadMatches(), 10000);
     this.props.loadMatches();
     socket.on("goal", match => {
       this.props.updateAfterGoalSocket(match);
     });
-    this.props.loadTeams()
-
+    socket.on("liveSucces", match => {
+      this.props.liveSuccessMatch(match);
+    });
+    this.props.loadTeams();
   }
   render() {
     return (
@@ -48,7 +51,11 @@ class App extends Component {
             <Route exact path="/login" render={() => <LoginPage />} />
             <Route exact path="/registration" render={() => <Registration />} />
             <Route exact path="/" render={() => <LandingPage />} />
-            <Route exact path="/match/:id" render={(props) => <MatchDetail {...props} /> } />
+            <Route
+              exact
+              path="/match/:id"
+              render={props => <MatchDetail {...props} />}
+            />
             <ProtectedRoute
               roles={[roles.admin]}
               path="/admin"
@@ -61,4 +68,7 @@ class App extends Component {
   }
 }
 
-export default connect((state) => ({matchesLoaded: state.matches.matchesLoaded}), { loadTeams, updateAfterGoalSocket, loadMatches })(App);
+export default connect(
+  state => ({ matchesLoaded: state.matches.matchesLoaded }),
+  { liveSuccessMatch, loadTeams, updateAfterGoalSocket, loadMatches }
+)(App);

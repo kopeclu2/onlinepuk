@@ -92,6 +92,26 @@ io.on('connection', function (socket) {
       }
     });
   });
+  socket.on('matchGoLive', function (_ref2) {
+    var token = _ref2.token,
+        match = _ref2.match,
+        liveValue = _ref2.liveValue;
+    console.log(liveValue);
+
+    _jsonwebtoken["default"].verify(token, _config["default"].secret, function (err, decoded) {
+      if (!err) {
+        _connectionDb["default"].connection.query('SELECT id, role from users WHERE id = ? ', [decoded.sub], function (err, result) {
+          if (result[0].role === 'Admin') {
+            _matches2["default"].setLiveMatch(match, liveValue).then(function () {
+              return liveValue && socket.broadcast.emit('liveSucces', {
+                match: match
+              });
+            })["catch"](function () {});
+          }
+        });
+      }
+    });
+  });
 });
 serverIO.listen(process.env.PORT || 4000, function () {
   console.log('listen');

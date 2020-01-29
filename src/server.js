@@ -64,7 +64,40 @@ io.on('connection', function (socket) {
 
       
     });
-    
-  });
+    socket.on('matchGoLive', ({token,match,liveValue}) => {
+      console.log(liveValue)
+      jwt.verify(token, config.secret, (err,decoded) => {
+        if(!err) {
+          db.connection.query('SELECT id, role from users WHERE id = ? ', [decoded.sub], (err,result) => {
+            if(result[0].role === 'Admin'){
+              console.log('LIVE')
+              matchesService.setLiveMatch(match,liveValue)
+              .then(()=> liveValue && socket.broadcast.emit('liveSucces', {match}))
+              .catch(() => {})
+            }
+          })
+        }
+      }
+    )
+    }
+  );
+  socket.on('matchGoFinished', ({token,match,finishedValue}) => {
+    console.log(finishedValue)
+    jwt.verify(token, config.secret, (err,decoded) => {
+      if(!err) {
+        db.connection.query('SELECT id, role from users WHERE id = ? ', [decoded.sub], (err,result) => {
+          if(result[0].role === 'Admin'){
+            matchesService.setMatchFinished(match,finishedValue)
+            .then(()=> {})
+            .catch(() => {})
+          }
+        })
+      }
+    }
+  )
+  }
+);
+})
+
 
 serverIO.listen(process.env.PORT || 4000,() => {console.log('listen')})
