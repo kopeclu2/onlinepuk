@@ -7,8 +7,8 @@ export const liveSuccessMatch = (match) => (dispatch, getState) => {
     const store = getState();
     const findedMatch = store.matches.matches.find((objMatch) => objMatch.id === match.match.id)
     const audio = new Audio(Whistle)
-    audio.play()
-    toast(<MatchGoalNotification match={findedMatch} live />, {
+    JSON.parse(localStorage.getItem('LIVE_NOTIFIC_SOUND')) &&  audio.play()
+    JSON.parse(localStorage.getItem('LIVE_NOTIFIC')) && toast(<MatchGoalNotification match={findedMatch} live />, {
         position: "bottom-left",
         autoClose: 10000,
         hideProgressBar: true,

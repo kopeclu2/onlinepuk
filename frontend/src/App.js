@@ -27,6 +27,7 @@ import { finishedMatch } from "./actions/Admin/finishedSuccess.js";
 import "./css/index.css";
 import { loadTeams } from "./actions/teams.js";
 import {loadUserFromToken} from './actions/loadUserFromToken.js'
+import KWD_LOGO from './kwd_logo.png'
 const socket = openSocket.connect("http://localhost:4000");
 
 export const history = createBrowserHistory();
@@ -51,7 +52,7 @@ class App extends Component {
   render() {
     return (
       <ConnectedRouter history={history}>
-        <div style={{ minHeight: "100vh" }}>
+        <div style={{ minHeight: "100vh", backgroundColor: 'rgb(245, 245, 245)' }}  >
           <NavigationBar history={history} />
           <Switch>
             <Route exact path="/login" render={() => <LoginPage />} />
@@ -68,6 +69,7 @@ class App extends Component {
               component={Admin}
             />
           </Switch>
+          
         </div>
       </ConnectedRouter>
     );

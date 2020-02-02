@@ -9,11 +9,11 @@ export const updateAfterGoalSocket = match => (dispatch, getStore) => {
   });
   const store = getStore();
   const findedMatch = store.matches.matches.find((objMatch) => objMatch.id === match.id)
-  console.log(findedMatch)
   const audio = new Audio(Horn)
-  audio.play()
+  JSON.parse(localStorage.getItem('LIVE_NOTIFIC_SOUND')) &&  audio.play()
  
-  toast(<MatchGoalNotification match={findedMatch} goal />, {
+ 
+  JSON.parse(localStorage.getItem('LIVE_NOTIFIC')) && toast(<MatchGoalNotification match={findedMatch} goal />, {
     position: "bottom-left",
     autoClose: 10000,
     hideProgressBar: true,

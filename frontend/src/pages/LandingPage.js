@@ -16,7 +16,7 @@ const LandingPage = ({
   setCurrentPagePaginationFinished
 }) => {
   return (
-    <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
+    <div style={{ backgroundColor: "#f5f5f5" }}>
       <Container maxWidth={"lg"} style={{ marginTop: "20px" }}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12} md={5}>
