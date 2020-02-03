@@ -9,11 +9,11 @@ exports["default"] = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
-
-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _config = _interopRequireDefault(require("../config.json"));
 
@@ -47,9 +47,72 @@ var _default = {
   authenticate: authenticate,
   getAll: getAll,
   getById: getById,
-  signUp: signUp
+  signUp: signUp,
+  checkValidToken: checkValidToken,
+  getUserFromToken: getUserFromToken
 };
 exports["default"] = _default;
+
+function checkValidToken(req, res) {
+  console.log(req.body);
+
+  _jsonwebtoken["default"].verify(req.body.token, _config["default"].secret, function (err, decoded) {
+    if (err) {
+      res.status(401).send({
+        message: "Neplatný token"
+      });
+    } else {
+      res.status(200).send({
+        message: "OK"
+      });
+    }
+  });
+}
+
+function getUserFromToken(req, res) {
+  console.log(req.body);
+  var token = req.body.token;
+
+  if (!token) {
+    return res.status(401).json({
+      message: "Chybí token"
+    });
+  }
+
+  _jsonwebtoken["default"].verify(token, _config["default"].secret, function (err, user) {
+    if (err) {
+      throw err;
+    } else {
+      console.log(user);
+
+      _connectionDb["default"].connection.query("SELECT * FROM users WHERE id = ?", [user.id || user.sub], function (err, result) {
+        if (err) {
+          console.log('ERROR', err);
+        } else {
+          console.log(result[0]);
+          var _result$ = result[0],
+              password = _result$.password,
+              id = _result$.id,
+              userWithoutPassword = (0, _objectWithoutProperties2["default"])(_result$, ["password", "id"]);
+
+          var newToken = _jsonwebtoken["default"].sign(_objectSpread({
+            sub: id
+          }, userWithoutPassword), _config["default"].secret, {
+            expiresIn: "30m"
+          });
+
+          res.send({
+            user: _objectSpread({
+              sub: id,
+              token: newToken
+            }, userWithoutPassword),
+            token: newToken
+          });
+        }
+      });
+    }
+  });
+}
 
 function signUp(_ref) {
   var username = _ref.username,
@@ -81,24 +144,6 @@ function signUp(_ref) {
 function authenticate(_x) {
   return _authenticate.apply(this, arguments);
 }
-/*
-async function authenticate({ username, password }) {
-    const user = users.find(u => u.username === username && u.password === password);
-
-    db.connection.query('SELECT * from users WHERE username = ?', [username], (err,result) => {
-        
-    })
-    if (user) {
-        const token = jwt.sign({ sub: user.id, role: user.role }, config.secret);
-        const { password, ...userWithoutPassword } = user;
-        return {
-            ...userWithoutPassword,
-            token
-        };
-    }
-}
-*/
-
 
 function _authenticate() {
   _authenticate = (0, _asyncToGenerator2["default"])(
@@ -116,7 +161,9 @@ function _authenticate() {
                   var token = _jsonwebtoken["default"].sign({
                     sub: user[0].id,
                     role: user[0].role
-                  }, _config["default"].secret);
+                  }, _config["default"].secret, {
+                    expiresIn: "30m"
+                  });
 
                   var _user$ = user[0],
                       _password = _user$.password,

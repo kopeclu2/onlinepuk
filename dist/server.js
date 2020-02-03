@@ -102,8 +102,30 @@ io.on('connection', function (socket) {
       if (!err) {
         _connectionDb["default"].connection.query('SELECT id, role from users WHERE id = ? ', [decoded.sub], function (err, result) {
           if (result[0].role === 'Admin') {
+            console.log('LIVE');
+
             _matches2["default"].setLiveMatch(match, liveValue).then(function () {
               return liveValue && socket.broadcast.emit('liveSucces', {
+                match: match
+              });
+            })["catch"](function () {});
+          }
+        });
+      }
+    });
+  });
+  socket.on('matchGoFinished', function (_ref3) {
+    var token = _ref3.token,
+        match = _ref3.match,
+        finishedValue = _ref3.finishedValue;
+    console.log(finishedValue);
+
+    _jsonwebtoken["default"].verify(token, _config["default"].secret, function (err, decoded) {
+      if (!err) {
+        _connectionDb["default"].connection.query('SELECT id, role from users WHERE id = ? ', [decoded.sub], function (err, result) {
+          if (result[0].role === 'Admin') {
+            _matches2["default"].setMatchFinished(match, finishedValue).then(function () {
+              return finishedValue && socket.broadcast.emit('finishedSuccess', {
                 match: match
               });
             })["catch"](function () {});

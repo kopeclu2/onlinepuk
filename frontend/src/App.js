@@ -15,7 +15,7 @@ import Admin from "./pages/Admin";
 import MatchDetail from "./pages/MatchDetail";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Button } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import openSocket from "socket.io-client";
 import matchGoalNotification from "./components/MatchGoalNotif";
 import { match } from "ramda";
@@ -52,7 +52,7 @@ class App extends Component {
   render() {
     return (
       <ConnectedRouter history={history}>
-        <div style={{ minHeight: "100vh", backgroundColor: 'rgb(245, 245, 245)' }}  >
+        <div style={{ minHeight: "100vh", backgroundColor: 'rgb(245, 245, 245)', position: 'relative' }}  >
           <NavigationBar history={history} />
           <Switch>
             <Route exact path="/login" render={() => <LoginPage />} />
@@ -69,7 +69,21 @@ class App extends Component {
               component={Admin}
             />
           </Switch>
-          
+          <footer style={{position: 'absolute',width: '100%', bottom: '0px', height:'100px', borderTop: '1px solid #e4e4e4', background:'white'}}>
+            <Grid container direction={'row'} alignItems={'center'}>
+            <Grid item xs={12} sm={4} style={{display:'flex', justifyContent:'center'}}>
+              <Typography style={{color: 'rgba(0, 0, 0, 0.54)'}} >© Copyright Kopecký Lukáš</Typography>
+              </Grid>
+              <Grid item xs={12} sm={4} style={{display:'flex', justifyContent:'center'}}>
+              <img src={KWD_LOGO} style={{width: '120px'}} />
+              </Grid>
+              
+              <Grid item xs={12} sm={4} style={{display:'flex', justifyContent:'center'}}>
+              <Typography style={{color: 'rgba(0, 0, 0, 0.54)'}} >Kontakt: lukas.kopecky.494@gmail.com</Typography>
+              </Grid>
+            </Grid>
+           
+          </footer>
         </div>
       </ConnectedRouter>
     );

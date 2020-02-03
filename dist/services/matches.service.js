@@ -387,10 +387,24 @@ var createMatch = function createMatch(req, res) {
 var setLiveMatch = function setLiveMatch(match, liveValue) {
   return new Promise(function (res, rej) {
     var value = liveValue ? 1 : 0;
-    var negValue = value === 0 ? 1 : 0;
-    console.log(negValue, value);
+    console.log(value, match.id);
 
-    _connectionDb["default"].connection.query('UPDATE matches SET live = ?, finished = ? WHERE id = ?', [value, negValue, match.id], function (err, result) {
+    _connectionDb["default"].connection.query('UPDATE matches SET live = ? WHERE id = ?', [value, match.id], function (err, result) {
+      if (err) {
+        console.log(err);
+        rej();
+      } else {
+        res();
+      }
+    });
+  });
+};
+
+var setMatchFinished = function setMatchFinished(match, finshedvalue) {
+  return new Promise(function (res, rej) {
+    var value = finshedvalue ? 1 : 0;
+
+    _connectionDb["default"].connection.query('UPDATE matches SET finished = ? WHERE id = ?', [value, match.id], function (err, result) {
       if (err) {
         console.log(err);
         rej();
@@ -409,7 +423,9 @@ var editMatch = function editMatch(req, res) {
       scoreHome = _req$body2.scoreHome,
       date = _req$body2.date,
       matchState = _req$body2.matchState,
-      stadion = _req$body2.stadion;
+      stadion = _req$body2.stadion,
+      live = _req$body2.live,
+      finished = _req$body2.finished;
 
   if ((0, _ramda.isEmpty)(req.body)) {
     res.status(400).json({
@@ -418,7 +434,10 @@ var editMatch = function editMatch(req, res) {
     return;
   }
 
-  _connectionDb["default"].connection.query("UPDATE `matches` SET name = ?, scoreHome = ?, scoreHost = ?, date = ?, matchState = ?, stadion = ?  WHERE id= ? ", [name, scoreHome, scoreHost, date, matchState, stadion, id], function (err, result, fields) {
+  var liveValue = live ? 1 : 0;
+  var finishedValue = finished ? 1 : 0;
+
+  _connectionDb["default"].connection.query("UPDATE `matches` SET name = ?, scoreHome = ?, scoreHost = ?, date = ?, matchState = ?, stadion = ?, live = ?, finished = ?   WHERE id= ? ", [name, scoreHome, scoreHost, date, matchState, stadion, liveValue, finishedValue, id], function (err, result, fields) {
     res.status(200).json({
       message: "Zapas byl uspesne editovan"
     });
@@ -465,6 +484,7 @@ var _default = {
   editMatchScore: editMatchScore,
   getMatch: getMatch,
   getAllFinsihedMatches: getAllFinsihedMatches,
-  setLiveMatch: setLiveMatch
+  setLiveMatch: setLiveMatch,
+  setMatchFinished: setMatchFinished
 };
 exports["default"] = _default;

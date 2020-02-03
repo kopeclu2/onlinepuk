@@ -158,7 +158,7 @@ const MatchDetail = ({ match, matchDetail, matches, width }) => {
     );
   };
   return !isNil(matchDetail) ? (
-    <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
+    <div style={{ backgroundColor: "#f5f5f5", paddingBottom:'120px' }}>
       <WidthWrapper>
         {renderMatchInfo(matchDetail)}
         {renderActions(matchDetail)}

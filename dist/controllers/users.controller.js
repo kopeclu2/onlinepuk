@@ -23,10 +23,20 @@ router.post('/authenticate', authenticate); // public route
 router.get('/', (0, _authorize["default"])(_role["default"].Admin), getAll); // admin only
 
 router.get('/:id', (0, _authorize["default"])(), getById);
-router.post('/signup', signup); // all authenticated users
+router.post('/signup', signup);
+router.post('/check', checkToken);
+router.post('/get/user/from/token', getUserFromToken); // all authenticated users
 
 var _default = router;
 exports["default"] = _default;
+
+function getUserFromToken(req, res) {
+  _user["default"].getUserFromToken(req, res);
+}
+
+function checkToken(req, res, next) {
+  _user["default"].checkValidToken(req, res);
+}
 
 function signup(req, res, next) {
   _user["default"].signUp(req.body).then(function (result) {
