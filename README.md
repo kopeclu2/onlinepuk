@@ -1,5 +1,8 @@
-# node-role-based-authorization-api
+# Produkcni prostredi
 
-Node.js Role Based Authorization API
+cd frontend && npm build
+./   npm start -> build serveru natazeni buildu frontendu 
 
-For documentation and instructions check out http://jasonwatmore.com/post/2018/11/28/nodejs-role-based-authorization-tutorial-with-example-api
+#SQL 
+onlinepuk.sql
+#NUTNA DATABAZE PRO CHOD APLIAKCE ! 
