@@ -7,6 +7,7 @@ import matchesReducer from './matchesReducer'
 import matchDetailReducer from './matchDetailReducer';
 import teamsReducer from './teamsReducer'
 import { reducer as formReducer } from 'redux-form'
+import discussionReducer from './discusionReducer';
 export default combineReducers({
   form: formReducer,
   ui: uiReducer,
@@ -14,5 +15,6 @@ export default combineReducers({
   user: userReducer,
   matches: matchesReducer,
   matchDetail: matchDetailReducer,
-  teams: teamsReducer
+  teams: teamsReducer,
+  discusion: discussionReducer
 });

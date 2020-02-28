@@ -2,7 +2,12 @@
 import jwt from "jsonwebtoken";
 import Role from "../_helpers/role";
 import db from "../_helpers/connectionDb";
+import { User } from "../models/User.js";
+import bcrypt from "bcrypt";
+import { has } from "ramda";
 // users hardcoded for simplicity, store in a db for production applications
+
+const saltRound = 15;
 const users = [
   {
     id: 1,
@@ -32,7 +37,6 @@ export default {
 };
 
 function checkValidToken(req, res) {
-  console.log(req.body);
   jwt.verify(req.body.token, config.secret, (err, decoded) => {
     if (err) {
       res.status(401).send({ message: "Neplatný token" });
@@ -42,7 +46,6 @@ function checkValidToken(req, res) {
   });
 }
 function getUserFromToken(req, res) {
-  console.log(req.body);
   const token = req.body.token;
   if (!token) {
     return res.status(401).json({
@@ -54,82 +57,93 @@ function getUserFromToken(req, res) {
     if (err) {
       throw err;
     } else {
-      console.log(user)
-      db.connection.query(
-        "SELECT * FROM users WHERE id = ?",
-        [user.id || user.sub],
-        (err, result) => {
-          if (err) {
-            console.log('ERROR',err);
-          } else {
-            console.log(result[0])
-            const { password, id,...userWithoutPassword } = result[0];
-            const newToken = jwt.sign({ sub: id ,...userWithoutPassword }, config.secret, {
+      User.findOne({ _id: user.sub }, (err, user) => {
+        if (user !== null && err === null) {
+          const token = jwt.sign(
+            { sub: user._id, role: user.role },
+            config.secret,
+            {
               expiresIn: "30m"
-            });
-            res.send({
-              user: { sub: id , token: newToken, ...userWithoutPassword },
-              token: newToken
-            });
-          }
-         
+            }
+          );
+          res.send({
+            username: user.username,
+            sub: user._id,
+            email: user.email,
+            role: user.role,
+            token
+          });
+        } else {
+          res.status(401).send({ message: "Spatny autorizacni token" });
         }
-      );
+      });
     }
   });
 }
 
 function signUp({ username, password, email }) {
   return new Promise((res, rej) => {
-    db.connection.query(
-      "SELECT * FROM users WHERE username= ? ",
-      [username],
-      (err, result) => {
-        if (result.length > 0) {
-          rej({ message: `Uzivatelske jmeno ${username} je jiz zabrane` });
-        } else {
-          db.connection.query(
-            "INSERT INTO users (username,email,password) VALUES(?,?,?)",
-            [username, email, password],
-            (err, result, fields) => {
+    User.findOne({ username: username }, (err, result) => {
+      if (result !== null) {
+        rej({ message: `Uzivatelske jmeno ${username} je jiz zabrane` });
+        return;
+      } else {
+        User.findOne({ email: email }, (err, result) => {
+          if (result !== null) {
+            rej({ message: `Email ${email} je jiz zabrany` });
+            return;
+          } else {
+            const salt = bcrypt.genSaltSync(saltRound);
+            const hash = bcrypt.hashSync(password, salt);
+            const user = new User({
+              username,
+              password: hash,
+              email,
+              role: Role.User
+            });
+            user.save((err, user) => {
               if (err) {
                 rej({ message: `Registrace selhala` });
               } else {
                 res({ message: `Uspensna registrace uzivatele ${username}` });
               }
-            }
-          );
-        }
+            });
+          }
+        });
       }
-    );
+    });
+  
   });
 }
 
 async function authenticate({ username, password }) {
-  //const user = users.find(u => u.username === username && u.password === password);
-  return new Promise((res, rej) =>
-    db.connection.query(
-      "SELECT * from users WHERE username = ? AND password = ?",
-      [username, password],
-      (err, user) => {
-        if (user.length > 0) {
-          const token = jwt.sign(
-            { sub: user[0].id, role: user[0].role },
-            config.secret,
-            {
-              expiresIn: "30m"
-            }
-          );
-          const { password, ...userWithoutPassword } = user[0];
-          res({
-            ...userWithoutPassword,
-            token
-          });
+  return new Promise(
+    (res, rej) =>
+      User.findOne({ username: username }, (err, user) => {
+        if (user !== null) {
+          if (bcrypt.compareSync(password, user.password)) {
+            const token = jwt.sign(
+              { sub: user._id, role: user.role },
+              config.secret,
+              {
+                expiresIn: "30m"
+              }
+            );
+            const { password, ...userWithoutPassword } = user;
+            res({
+              username: user.username,
+              sub: user._id,
+              email: user.email,
+              role: user.role,
+              token
+            });
+          } else {
+            rej({ message: "Špatné ověřovací údaje" });
+          }
         } else {
-          res();
+          rej({ message: "Špatné ověřovací údaje" });
         }
-      }
-    )
+      })
   );
 }
 async function getAll() {

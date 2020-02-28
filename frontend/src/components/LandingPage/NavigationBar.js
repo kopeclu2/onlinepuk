@@ -39,9 +39,15 @@ const NavigationBar = ({ history, user }) => {
     <div className={classes.root}>
       <AppBar position="static" color="primary" className={classes.appBar}>
         <Toolbar>
+          
           <Link to="/">
             <Typography variant="h6" className={classes.title}>
               Onlajny - OLLH
+            </Typography>
+          </Link>
+          <Link to="/chatRoom" style={{marginLeft: "20px"}}>
+            <Typography variant="h6" className={classes.title}>
+              Diskuze
             </Typography>
           </Link>
           <Typography variant="h6" className={classes.title}>
@@ -56,6 +62,8 @@ const NavigationBar = ({ history, user }) => {
               Admin
             </Typography>
           ) : null}
+         
+          
           <Tooltip title="Vypnout notifikace" onClick={e => {
                 const value = JSON.parse(localStorage.getItem("LIVE_NOTIFIC_SOUND"));
                 if (value) {

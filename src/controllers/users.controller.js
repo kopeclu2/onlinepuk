@@ -21,7 +21,9 @@ function checkToken(req,res,next) {
 }
 function signup(req,res,next) {
     userService.signUp(req.body)
-    .then((result) => authenticate(req,res,next))
+    .then(({message}) => {
+        authenticate(req,res,next)
+    } )
     .catch(err => res.status(400).json(err))
 } 
 

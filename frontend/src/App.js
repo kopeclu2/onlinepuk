@@ -28,6 +28,9 @@ import "./css/index.css";
 import { loadTeams } from "./actions/teams.js";
 import {loadUserFromToken} from './actions/loadUserFromToken.js'
 import KWD_LOGO from './kwd_logo.png'
+import ChatRoom from "./pages/ChatRooms";
+var moment = require('moment');
+moment.locale('cs');
 const socket = openSocket.connect("http://localhost:4000");
 
 export const history = createBrowserHistory();
@@ -58,6 +61,7 @@ class App extends Component {
             <Route exact path="/login" render={() => <LoginPage />} />
             <Route exact path="/registration" render={() => <Registration />} />
             <Route exact path="/" render={() => <LandingPage />} />
+            <Route exact path="/chatRoom" component={ChatRoom} />
             <Route
               exact
               path="/match/:id"

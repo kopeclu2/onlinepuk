@@ -12,8 +12,11 @@ const getTeamById = async id => {
       "SELECT * FROM teams WHERE id = ? ",
       [id],
       (err, result, fields) => {
-        res(result);
-      }
+        if(!err)
+          res(result);
+        else 
+          rej(new Error('Nezdařilo se najít zápas'));
+        }
     )
   );
 };

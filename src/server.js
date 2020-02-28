@@ -10,12 +10,33 @@ import db from './_helpers/connectionDb'
 import teamsController from './controllers/teams.controller'
 import commentController from './controllers/usersComments.controller'
 import matchActionController from './controllers/matchAction.controller'
+import chatRoomCotnroller from './controllers/chatRoomController'
 import http from 'http'
 import socketio from 'socket.io'
 import config from './config.json'
 import jwt from 'jsonwebtoken'
 import path from 'path'
 import matchesService from './services/matches.service';
+import { User } from './models/User';
+const mongoose = require('mongoose')
+
+const uri = "mongodb+srv://Lukasek:Monstercar494@onlinepuk-9lent.mongodb.net/test?retryWrites=true&w=majority";
+
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true 
+});
+let dbMongo = mongoose.connection;
+
+dbMongo.once('opne', () => {
+  console.log('MONGO CONNECTED')
+})
+dbMongo.on('error',(err)=>{
+  console.log(err)
+})
+
+
+
 var serverIO = http.createServer(app);
 
 const io = socketio(serverIO)
@@ -40,6 +61,7 @@ app.use('/matches', matchController )
 app.use('/teams', teamsController)
 app.use('/comment', commentController)
 app.use('/actions', matchActionController)
+app.use('/chatRoom', chatRoomCotnroller)
 // global error handler
 app.use(errorHandler);
 
