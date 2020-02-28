@@ -32,7 +32,8 @@ const useStyles = makeStyles(theme => ({
 
 const NavigationBar = ({ history, user }) => {
   const { isAuthenticated } = user;
-  const [notif, setNotif] = useState(JSON.parse(window.localStorage.getItem("LIVE_NOTIFIC")))
+  const [notif, setNotif] = useState(JSON.parse(localStorage.getItem("LIVE_NOTIFIC")))
+  const [notifSound, setNotifSound] = useState(JSON.parse(localStorage.getItem("LIVE_NOTIFIC_SOUND")))
   const classes = useStyles();
 
   return (
@@ -65,13 +66,13 @@ const NavigationBar = ({ history, user }) => {
          
           
           <Tooltip title="Vypnout notifikace" onClick={e => {
-                const value = JSON.parse(localStorage.getItem("LIVE_NOTIFIC_SOUND"));
+                const value = notifSound;
                 if (value) {
                   localStorage.setItem("LIVE_NOTIFIC_SOUND", JSON.stringify(false));
-                  setNotif(false)
+                  setNotifSound(false)
                 } else {
                   localStorage.setItem("LIVE_NOTIFIC_SOUND", true);
-                  setNotif(true)
+                  setNotifSound(true)
                 }              
               }}>
             <IconButton
@@ -79,7 +80,7 @@ const NavigationBar = ({ history, user }) => {
               style={{ color: "white" }}
               
             >
-              { JSON.parse(localStorage.getItem("LIVE_NOTIFIC_SOUND")) ? (
+              { notifSound ? (
                 <VolumeUpIcon fontSize={"large"} />
               ) : (
                 <VolumeOffIcon fontSize={"large"} />
@@ -91,10 +92,11 @@ const NavigationBar = ({ history, user }) => {
               aria-label="delete"
               style={{ color: "white" }}
               onClick={e => {
-                const value = JSON.parse(localStorage.getItem("LIVE_NOTIFIC"));
+                const value = notif;
                 if (value) {
                   localStorage.setItem("LIVE_NOTIFIC", JSON.stringify(false));
                   localStorage.setItem("LIVE_NOTIFIC_SOUND", JSON.stringify(false));
+                  setNotifSound(false);
                   setNotif(false)
                 } else {
                   localStorage.setItem("LIVE_NOTIFIC", true);
@@ -102,7 +104,7 @@ const NavigationBar = ({ history, user }) => {
                 }              
               }}
             >
-              { JSON.parse(localStorage.getItem("LIVE_NOTIFIC")) ? (
+              { notif ? (
                 <NotificationsActiveOutlinedIcon fontSize={"large"} />
               ) : (
                 <NotificationsOffIcon fontSize={"large"} />

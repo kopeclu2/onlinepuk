@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import moment from "moment";
 import CancelIcon from "@material-ui/icons/Cancel";
 import EditSection from "./EditSection";
+import Answer from "./Answer";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,18 +31,32 @@ const useStyles = makeStyles(theme => ({
     display: "inline"
   }
 }));
-const Comment = ({ subComment, comment, user, deleteComment, edit }) => {
+const Comment = ({
+  subComment,
+  comment,
+  user,
+  deleteComment,
+  edit,
+  response
+}) => {
   const [Value, setValue] = useState("");
   const [Edit, setEdit] = useState(false);
+  const [answer, setAnswer] = useState(false);
 
   const classes = useStyles();
+
   const commentOwner = user.sub === comment.postedBy._id;
-  console.log(Value);
+  console.log(comment);
   return (
-    <div style={{ marginBottom: "2px" }}>
+    <div style={{ marginBottom: "2px", marginTop: "2px", clear: "both" }}>
       <Paper
         style={
-          subComment && { float: "right", width: "90%", marginBottom: "2px" }
+          subComment && {
+            float: "right",
+            width: "90%",
+            marginTop: "2px",
+            marginBottom: "2px"
+          }
         }
       >
         <ListItem alignItems="flex-start" className={classes.root}>
@@ -59,7 +74,12 @@ const Comment = ({ subComment, comment, user, deleteComment, edit }) => {
             </Grid>
             <Grid item md={commentOwner ? 9 : 11}>
               {Edit ? (
-                <EditSection commentID={comment._id} setEdit={setEdit} value={Value} setValue={setValue} />
+                <EditSection
+                  commentID={comment._id}
+                  setEdit={setEdit}
+                  value={Value}
+                  setValue={setValue}
+                />
               ) : (
                 <ListItemText
                   primary={
@@ -130,15 +150,18 @@ const Comment = ({ subComment, comment, user, deleteComment, edit }) => {
             )}
             {user.isAuthenticated && (
               <Grid item md={12}>
-                <Link
-                  component="button"
-                  variant="body2"
-                  onClick={() => {
-                    console.info("I'm a button.");
-                  }}
-                >
-                  Odpovědět
-                </Link>
+                {!subComment && (
+                  <Link
+                    component="button"
+                    variant="body2"
+                    onClick={() => {
+                      setAnswer(true);
+                    }}
+                  >
+                    Odpovědět
+                  </Link>
+                )}
+
                 <Link
                   style={{ marginLeft: "25px" }}
                   component="button"
@@ -154,12 +177,22 @@ const Comment = ({ subComment, comment, user, deleteComment, edit }) => {
           </Grid>
         </ListItem>
       </Paper>
+      {!subComment && answer && (
+        <div style={{ marginBottom: "2px", marginTop: "2px" }}>
+          <Answer
+            parrentID={comment._id}
+            answer={answer}
+            setAnswer={setAnswer}
+          />
+        </div>
+      )}
       {!comment.isSubComment &&
         comment.subComments.map(subComment => {
           return (
-            <div style={{ marginBottom: "2px" }}>
+            <div style={{ marginBottom: "2px", clear: "both" }}>
               {" "}
               <Comment
+                parrentID={comment._id}
                 edit={edit}
                 subComment
                 setValue={setValue}

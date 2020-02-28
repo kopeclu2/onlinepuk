@@ -57,6 +57,16 @@ const matchesReducer = (state = initialState , {payload, type}) => {
             ...state,
             matches: newMatchesGoal
         }
+        case 'SET_FINISHED_MATCH': 
+            const updatedMatchesFinish = state.matches.map((match) => match.id === payload ? {
+                ...match,
+                finished: 1,
+                live: 0,
+            } : match)
+            return {
+                ...state,
+                matches: updatedMatchesFinish
+            }
         default:
             return state;    
     }

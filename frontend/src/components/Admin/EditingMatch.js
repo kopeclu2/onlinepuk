@@ -33,9 +33,11 @@ let EditingMatch = ({ match, matchValues }) => {
   };
   return (
     <Container maxWidth="sm">
+      <form >
       <FirstRowInfo match={match} scoreGoalSocket={scoreGoal} />
       <MatchInfo match={match} matchSocketLive={matchLive} matchFinished={matchFinished} />
       <ActionsCreate match={match} />
+      </form>
     </Container>
   );
 };
@@ -57,6 +59,7 @@ EditingMatch = connect(state => ({
     scoreHost: selector(state, "scoreHost"),
     id: selector(state, "id")
   },
+  
   match: find(propEq("id", state.ui.editingMatch.id), state.matches.matches)
 }))(EditingMatch);
 

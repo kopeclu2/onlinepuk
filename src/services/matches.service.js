@@ -126,7 +126,7 @@ const setLiveMatch = (match,liveValue) => (new Promise((res,rej) => {
 
 const setMatchFinished = (match, finshedvalue) => (new Promise((res,rej) => {
   const value = finshedvalue ? 1 : 0;
-  db.connection.query('UPDATE matches SET finished = ? WHERE id = ?',[value,match.id], (err,result) => {
+  db.connection.query('UPDATE matches SET finished = ?, live = ? WHERE id = ?',[value,0,match.id], (err,result) => {
     if(err) {
       console.log(err)
       rej()
@@ -158,6 +158,7 @@ const editMatch = (req, res) => {
     "UPDATE `matches` SET name = ?, scoreHome = ?, scoreHost = ?, date = ?, matchState = ?, stadion = ?, live = ?, finished = ?   WHERE id= ? ",
     [name, scoreHome, scoreHost, date, matchState,stadion,liveValue, finishedValue, id],
     (err, result, fields) => {
+      console.log(err)
       res.status(200).json({ message: "Zapas byl uspesne editovan" });
     }
   );

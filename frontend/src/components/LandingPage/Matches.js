@@ -19,6 +19,7 @@ class Matches extends Component {
           finished ? (
             matchesFinished && 
             matchesFinished.map((match, index) => (
+              !match.live && 
               <Link to={`/match/${match.id}`} key={index}>
                 <Match match={match} />
               </Link>
@@ -26,7 +27,7 @@ class Matches extends Component {
           ) : (
             matchesScheduled &&  
             matchesScheduled.map((match, index) =>
-                <Link to={`/match/${match.id}`}  key={index}>
+            !match.live &&  <Link to={`/match/${match.id}`}  key={index}>
                   <Match match={match} />
                 </Link>
             )

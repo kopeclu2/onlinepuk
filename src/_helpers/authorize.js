@@ -1,30 +1,29 @@
-const expressJwt = require('express-jwt');
-import { secret } from '../config.json'
+const expressJwt = require("express-jwt");
+import { secret } from "../config.json";
+import { User } from "../models/User.js";
 
 module.exports = authorize;
 
 function authorize(roles = []) {
-    // roles param can be a single role string (e.g. Role.User or 'User') 
-    // or an array of roles (e.g. [Role.Admin, Role.User] or ['Admin', 'User'])
-    if (typeof roles === 'string') {
-        roles = [roles];
-    }
+  // roles param can be a single role string (e.g. Role.User or 'User')
+  // or an array of roles (e.g. [Role.Admin, Role.User] or ['Admin', 'User'])
+  if (typeof roles === "string") {
+    roles = [roles];
+  }
 
-    return [
-        // authenticate JWT token and attach user to request object (req.user)
-        expressJwt({ secret }),
-
-        // authorize based on user role
-        (req, res, next) => {
-            console.log(res.user)
-            if (roles.length && !roles.includes(req.user.role)) {
-                // user's role is not authorized
-                
-                return res.status(401).json({ message: 'Nemáte dostatečná práva ! ' });
-            }
-
-            // authentication and authorization successful
-            next();
+  return [
+    expressJwt({ secret }),
+    (req, res, next) => {
+      console.log("USER", req.user);
+      User.findById(req.user.sub, (err, userDb) => {
+        console.log("USERDB", userDb);
+        if (roles.length && !roles.includes(userDb.role)) {
+          return res
+            .status(401)
+            .json({ message: "Nemáte dostatečná práva ! " });
         }
-    ];
+      });
+      next();
+    }
+  ];
 }

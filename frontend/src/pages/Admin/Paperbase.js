@@ -199,7 +199,7 @@ function Paperbase(props) {
             throw new Error();
           }
         })
-        .catch((err) => {console.log(err.text()); toast.warn('Něco se nezdařilo'); setRedirect(true)});
+        .catch((err) => { if(err.text){console.log(err.text()); toast.warn('Něco se nezdařilo'); setRedirect(true)}});
   },[])
 
   if (redirect) return <Redirect to={{ pathname: "/login", state: { from: props.location } }} />

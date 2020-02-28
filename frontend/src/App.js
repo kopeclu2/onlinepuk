@@ -15,10 +15,7 @@ import Admin from "./pages/Admin";
 import MatchDetail from "./pages/MatchDetail";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Button, Grid, Typography } from "@material-ui/core";
 import openSocket from "socket.io-client";
-import matchGoalNotification from "./components/MatchGoalNotif";
-import { match } from "ramda";
 import { loadMatches } from "./actions/matches";
 import { connect } from "react-redux";
 import { updateAfterGoalSocket } from "./actions/Admin/updateAfterGoalSocket";
@@ -48,6 +45,7 @@ class App extends Component {
       this.props.liveSuccessMatch(match);
     });
     socket.on("finishedSuccess", match => {
+      console.log('finished', match)
       this.props.finishedMatch(match);
     });
     this.props.loadTeams();
@@ -73,7 +71,20 @@ class App extends Component {
               component={Admin}
             />
           </Switch>
-          <footer style={{position: 'absolute',width: '100%', bottom: '0px', height:'100px', borderTop: '1px solid #e4e4e4', background:'white'}}>
+          
+        </div>
+      </ConnectedRouter>
+    );
+  }
+}
+
+export default connect(
+  state => ({ matchesLoaded: state.matches.matchesLoaded }),
+  { liveSuccessMatch, loadTeams, updateAfterGoalSocket,loadUserFromToken, finishedMatch, loadMatches }
+)(App);
+
+/*
+<footer style={{position: 'absolute',width: '100%', bottom: '0px', height:'100px', borderTop: '1px solid #e4e4e4', background:'white'}}>
             <Grid container direction={'row'} alignItems={'center'}>
             <Grid item xs={12} sm={4} style={{display:'flex', justifyContent:'center'}}>
               <Typography style={{color: 'rgba(0, 0, 0, 0.54)'}} >© Copyright Kopecký Lukáš</Typography>
@@ -87,14 +98,4 @@ class App extends Component {
               </Grid>
             </Grid>
            
-          </footer>
-        </div>
-      </ConnectedRouter>
-    );
-  }
-}
-
-export default connect(
-  state => ({ matchesLoaded: state.matches.matchesLoaded }),
-  { liveSuccessMatch, loadTeams, updateAfterGoalSocket,loadUserFromToken, finishedMatch, loadMatches }
-)(App);
+          </footer>*/

@@ -35,6 +35,7 @@ const MatchInfo = ({
 }) => {
   const classes = useStyles();
   const socketEmit = () => {};
+  console.log()
   return (
     <div>
       <ExpansionPanel>

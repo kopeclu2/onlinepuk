@@ -9,6 +9,7 @@ import {
   Grid,
   CircularProgress
 } from "@material-ui/core";
+import Skeleton from 'react-loading-skeleton';
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Comment from "../components/ChatRoom/Comment";
@@ -86,14 +87,16 @@ const ChatRoom = ({
       {loading ? (
         <Grid container justify={"center"} alignItems={"center"}>
           {" "}
-          <CircularProgress />{" "}
+          <Skeleton count={5} height={100} />{" "}
         </Grid>
       ) : (
         <List className={classes.root} style={{ marginTop: "20px" }}>
           {!isEmpty(comments) &&
             comments.map(comment => <Comment user={user} edit={loadCommentToEdit} deleteComment={deleteComment}  comment={comment} />)}
         </List>
+        
       )}
+
     </Container>
   );
 };

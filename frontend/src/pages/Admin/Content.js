@@ -87,6 +87,8 @@ function Content({
   editingMatchOpen,
   editingMatchClose
 }) {
+  const [live, setlive] = useState(localStorage.getItem('LIVE_NOTIF'))
+  console.log('LIVE LCOAL', live)
   useEffect(() => loadMatches(), []);
   return (
     <Paper className={classes.paper}>
@@ -130,8 +132,11 @@ function Content({
           <FormControlLabel
             control={
               <Switch
-                checked={JSON.parse(localStorage.getItem('LIVE_NOTIF'))}
-                onChange={(event) => localStorage.setItem('LIVE_NOTIF', event.target.checked)}
+                checked={live}
+                onChange={(event) => {
+                  localStorage.setItem('LIVE_NOTIF', event.target.checked);
+                  setlive(event.target.checked)
+                }}
               />
             }
             label="Editovat s norifikacemi ? "

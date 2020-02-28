@@ -40,6 +40,7 @@ const createComment = (req, res) => {
 };
 const createSubComment = (req, res) => {
   const parentComment = req.body.parrentID;
+  console.log(req.body)
   const comment = new ChatRoomComment({
     content: req.body.content,
     postedBy: [req.body.user],
@@ -51,10 +52,11 @@ const createSubComment = (req, res) => {
     oldComment.subComments.push(comment);
     oldComment.save((err, comment) => {
       console.log(err, comment);
+      if (!err) {
+        getAllComments(req, res);
+      }
     });
-    if (!err) {
-      getAllComments(req, res);
-    }
+    
   });
 };
 const updateSubComment = (req,res) => {

@@ -18,6 +18,7 @@ import jwt from 'jsonwebtoken'
 import path from 'path'
 import matchesService from './services/matches.service';
 import { User } from './models/User';
+
 const mongoose = require('mongoose')
 
 const uri = "mongodb+srv://Lukasek:Monstercar494@onlinepuk-9lent.mongodb.net/test?retryWrites=true&w=majority";
@@ -34,16 +35,11 @@ dbMongo.once('opne', () => {
 dbMongo.on('error',(err)=>{
   console.log(err)
 })
-
-
-
 var serverIO = http.createServer(app);
-
 const io = socketio(serverIO)
 try {
   db.connect();
 } catch (err) {console.log(err)}
-
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -69,8 +65,9 @@ io.on('connection', function (socket) {
     socket.on('goalScoreAdmin', function ({token, match}) {
       jwt.verify(token, config.secret, (err,decoded) => {
         if(!err) {
-          db.connection.query('SELECT id, role from users WHERE id = ? ', [decoded.sub], (err,result) => {
-            if(result[0].role === 'Admin'){
+          User.findById(decoded.sub, (err,user) => {
+            console.log('SUER WS', user)
+            if(user.role === 'Admin'){
                 matchesService.editMatchScore(match)
                 .then(() => {
                   matchesService.getMatch(match.id).then(match => {
@@ -90,14 +87,15 @@ io.on('connection', function (socket) {
       console.log(liveValue)
       jwt.verify(token, config.secret, (err,decoded) => {
         if(!err) {
-          db.connection.query('SELECT id, role from users WHERE id = ? ', [decoded.sub], (err,result) => {
-            if(result[0].role === 'Admin'){
-              console.log('LIVE')
-              matchesService.setLiveMatch(match,liveValue)
-              .then(()=> liveValue && socket.broadcast.emit('liveSucces', {match}))
-              .catch(() => {})
-            }
-          })
+            User.findById(decoded.sub, (err,user) => {
+              if(user.role === 'Admin'){
+                matchesService.setLiveMatch(match,liveValue)
+                .then(()=> liveValue && socket.broadcast.emit('liveSucces', {match}))
+                .catch(() => {})
+              }
+            })
+        } else {
+          console.log('ERROR WS','color: red')
         }
       }
     )
@@ -107,8 +105,8 @@ io.on('connection', function (socket) {
     console.log(finishedValue)
     jwt.verify(token, config.secret, (err,decoded) => {
       if(!err) {
-        db.connection.query('SELECT id, role from users WHERE id = ? ', [decoded.sub], (err,result) => {
-          if(result[0].role === 'Admin'){
+        User.findById(decoded.sub, (err,user) => {
+          if(user.role === 'Admin'){
             matchesService.setMatchFinished(match,finishedValue)
             .then(()=> finishedValue && socket.broadcast.emit('finishedSuccess', {match}))
             .catch(() => {})
