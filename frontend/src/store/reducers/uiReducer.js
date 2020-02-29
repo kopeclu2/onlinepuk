@@ -5,7 +5,10 @@ const initialState = {
   editingMatch: {
     bool: false,
     id: null
-  }
+  },
+  usersOpen: false,
+  registrationLoading: false,
+  loginLoading: false,
 };
 
 export default function(state = initialState, action) {
@@ -48,6 +51,36 @@ export default function(state = initialState, action) {
         ...state,
         paginationCurrentPageScheduled: action.payload
       }
+    case "USERS_OPEN":
+        return {
+          ...state,
+          usersOpen: true
+        }
+        case "USERS_CLOSE":
+          return {
+            ...state,
+            usersOpen: false
+          }
+    case "REGISTRATION_LOADING": 
+    return {
+      ...state,
+      registrationLoading: true
+    }
+    case "REGISTRATION_LOADING_FINISH": 
+    return {
+      ...state,
+      registrationLoading: false
+    }
+    case "LOGIN_PENDING": 
+    return {
+      ...state,
+      loginLoading: true,
+    }
+    case "LOGIN_PENDING_FINISH": 
+    return {
+      ...state,
+      loginLoading: false,
+    }
     default:
       return state;
   }

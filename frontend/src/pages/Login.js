@@ -1,5 +1,5 @@
   
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,7 +15,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { connect } from 'react-redux';
 import {login} from '../actions/login'
-import {withRouter} from 'react-router'
+import {withRouter, Redirect} from 'react-router'
+import Backdrop from '@material-ui/core/Backdrop';
+import Loader from '../components/Loader';
 
 function Copyright() {
   return (
@@ -50,16 +52,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const LoginPage = ({login}) => {
+const LoginPage = ({login,user,loading}) => {
     const [userName, setuserName] = useState('')
     const [password, setpassword] = useState('')
+    const [redirect, setRedirect] = useState(false)
+    console.log('LOADING', loading)
+    useEffect(() => {
+      if(user) {
+        setRedirect(true)
+      }
+    },[user])
   const classes = useStyles();
     const onSubmit = (e) => {
         e.preventDefault()
         login(userName,password)
     }
+    if(redirect) {
+      return <Redirect to="/" />
+    }
   return (
     <Container component="main" maxWidth="xs">
+      <Loader open={loading} />
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar} src={'https://www.hccestice.cz/img/picture/1033/znak_hc_cestice_700px.png'}>
@@ -128,4 +141,4 @@ const LoginPage = ({login}) => {
   );
 }
 
-export default connect((state) => {}, {login})(withRouter(LoginPage))
+export default connect((state) => ({user: state.user.isAuthenticated, loading: state.ui.loginLoading}), {login})(withRouter(LoginPage))

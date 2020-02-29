@@ -33,7 +33,8 @@ export default {
   getById,
   signUp,
   checkValidToken,
-  getUserFromToken
+  getUserFromToken,
+  deleteUser
 };
 
 function checkValidToken(req, res) {
@@ -63,7 +64,7 @@ function getUserFromToken(req, res) {
             { sub: user._id, role: user.role },
             config.secret,
             {
-              expiresIn: "30m"
+              expiresIn: "1h"
             }
           );
           res.send({
@@ -80,7 +81,16 @@ function getUserFromToken(req, res) {
     }
   });
 }
-
+function deleteUser(req,res) {
+  User.findOneAndDelete({_id: req.body._id},(err, user) => {
+    if(!err) {
+      getAll(req,res)
+    } else {
+        res.status(400).send({message: 'Nepodarilo se vymazat uzivatele'})
+    }
+      
+  })
+}
 function signUp({ username, password, email }) {
   return new Promise((res, rej) => {
     User.findOne({ username: username }, (err, result) => {
@@ -99,7 +109,7 @@ function signUp({ username, password, email }) {
               username,
               password: hash,
               email,
-              role: Role.User
+              role: Role.User,
             });
             user.save((err, user) => {
               if (err) {
@@ -126,7 +136,7 @@ async function authenticate({ username, password }) {
               { sub: user._id, role: user.role },
               config.secret,
               {
-                expiresIn: "30m"
+                expiresIn: "1h"
               }
             );
             const { password, ...userWithoutPassword } = user;
@@ -146,11 +156,12 @@ async function authenticate({ username, password }) {
       })
   );
 }
-async function getAll() {
-  return users.map(u => {
-    const { password, ...userWithoutPassword } = u;
-    return userWithoutPassword;
-  });
+async function getAll(req,res) {
+    const query = User.find({}).select("_id username email role")
+    query.exec((err,value) => {
+      res.send(value)
+    })
+
 }
 
 async function getById(id) {

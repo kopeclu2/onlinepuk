@@ -23,7 +23,7 @@ const EditSection = (props) => {
           color="primary"
           style={{ padding: "14.5px 14px" }}
           onClick={() => {
-            props.updateComment(props.commentID, props.value)
+            props.updateSubCommentWS(props.value, props.commentID )
             props.setEdit(false)
           }}
         >

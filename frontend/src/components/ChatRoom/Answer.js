@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     }
   }));
 
-const Answer = ({createSubComment, parrentID, setAnswer}) => {
+const Answer = ({createSubComment, parrentID, setAnswer, createSubCommentWS}) => {
   const [text, settext] = useState("");
   const classes = useStyles();
   console.log(parrentID)
@@ -39,7 +39,7 @@ const Answer = ({createSubComment, parrentID, setAnswer}) => {
               size="large"
               color="primary"
               style={{ padding: "14.5px 14px" }}
-              onClick={e => { createSubComment(parrentID, text); setAnswer(false)}}
+              onClick={e => { createSubCommentWS(parrentID, text); setAnswer(false)}}
             >
               Odeslat
             </Button>

@@ -14,6 +14,7 @@ const getAllComments = (req, res) => {
       },      
     })
     .where("isSubComment").equals(false)
+    .where("postedBy").ne(null)
     .sort({ date: -1 })
     .exec()
     .then(docs => res.send(docs));

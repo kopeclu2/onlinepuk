@@ -1,7 +1,7 @@
 import Axios from "axios"
 import {history} from '../App'
 import {push} from 'connected-react-router'
-
+import {toast} from 'react-toastify'
 export const loginPending = () => {
     return {
         type: 'LOGIN_PENDING'
@@ -23,9 +23,19 @@ export const login = (username,password) => (dispatch) => {
         dispatch(loginSucces(data))
         localStorage.setItem('token', data.token)
         dispatch(push('/'))
+        dispatch(loginPendingFinish())
     })
-    .catch(err => console.log(err))
-    dispatch(loginPendingFinish())
+    .catch(err => {
+        toast(err.response.data.message, {
+            hideProgressBar: true,
+            position: toast.POSITION.BOTTOM_CENTER,
+            pauseOnHover: true,
+            autoClose: 10000,
+            type: toast.TYPE.ERROR
+        })
+        dispatch(loginPendingFinish())
+    })
+    
 }
 export const logout = () => (dispatch) => {
     dispatch({type: 'LOGOUT'})

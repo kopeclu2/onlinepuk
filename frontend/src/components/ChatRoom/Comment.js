@@ -21,6 +21,9 @@ import moment from "moment";
 import CancelIcon from "@material-ui/icons/Cancel";
 import EditSection from "./EditSection";
 import Answer from "./Answer";
+import openSocket from "socket.io-client";
+import { isNil } from "ramda";
+const socket = openSocket.connect("http://localhost:4000");
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -44,9 +47,36 @@ const Comment = ({
   const [answer, setAnswer] = useState(false);
 
   const classes = useStyles();
-
-  const commentOwner = user.sub === comment.postedBy._id;
-  console.log(comment);
+  const deleteCommentWS = () => {
+    socket.emit("deleteComment", {
+      token: localStorage.getItem("token"),
+      _id: comment._id,
+      user: user.sub
+    });
+  };
+  const createSubCommentWS = (parrentID,content) => {
+    socket.emit("createSubComment", {
+      token: localStorage.getItem("token"),
+      parrentID: comment._id,
+      user: user.sub,
+      content: content
+    });
+  };
+  const updateSubCommentWS = (content,_id) => {
+    socket.emit("updateSubComment", {
+      token: localStorage.getItem("token"),
+      _id: _id,
+      content: content
+    });
+  };
+  console.log('COMMENT',comment);
+  if( isNil(comment.postedBy)) {
+      return '';
+  } 
+    const commentOwner = user.sub === comment.postedBy._id;
+  
+  
+  
   return (
     <div style={{ marginBottom: "2px", marginTop: "2px", clear: "both" }}>
       <Paper
@@ -79,6 +109,7 @@ const Comment = ({
                   setEdit={setEdit}
                   value={Value}
                   setValue={setValue}
+                  updateSubCommentWS={updateSubCommentWS}
                 />
               ) : (
                 <ListItemText
@@ -143,7 +174,7 @@ const Comment = ({
                   </IconButton>
                 )}
 
-                <IconButton onClick={() => deleteComment(comment._id)}>
+                <IconButton onClick={() => deleteCommentWS()}>
                   <DeleteIcon color="secondary" />
                 </IconButton>
               </Grid>
@@ -183,6 +214,7 @@ const Comment = ({
             parrentID={comment._id}
             answer={answer}
             setAnswer={setAnswer}
+            createSubCommentWS={createSubCommentWS}
           />
         </div>
       )}

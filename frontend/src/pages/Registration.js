@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,7 +12,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import { registration } from '../actions/registration';
+import {connect} from 'react-redux'
+import Loader from '../components/Loader';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -46,18 +48,26 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Registration() {
+const Registration = ({registration, loading}) => {
+  const [username, setUserName] = useState('')
+  const [email, setEmail] = useState('')
+  const [lastName, setlastName] = useState('')
+  const [password, setPassword] = useState('')
   const classes = useStyles();
-
+  const onSubmit = (e) => {
+      e.preventDefault()
+      registration({username,password,email})
+  }
   return (
     <Container component="main" maxWidth="xs">
+      <Loader open={loading}/>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar} src={'https://www.hccestice.cz/img/picture/1033/znak_hc_cestice_700px.png'}/>
         <Typography component="h1" variant="h5">
           Registrace
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={onSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -65,6 +75,8 @@ export default function Registration() {
                 name="firstName"
                 variant="outlined"
                 required
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
                 fullWidth
                 id="firstName"
                 label="First Name"
@@ -76,6 +88,8 @@ export default function Registration() {
                 variant="outlined"
                 required
                 fullWidth
+                value={lastName}
+                onChange={(e) => setlastName(e.target.value)}
                 id="lastName"
                 label="Last Name"
                 name="lastName"
@@ -87,6 +101,8 @@ export default function Registration() {
                 variant="outlined"
                 required
                 fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 id="email"
                 label="Email Address"
                 name="email"
@@ -97,6 +113,8 @@ export default function Registration() {
               <TextField
                 variant="outlined"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 fullWidth
                 name="password"
                 label="Password"
@@ -136,3 +154,4 @@ export default function Registration() {
     </Container>
   );
 }
+export default connect((state)=>({loading: state.ui.registrationLoading}),{registration})(Registration)

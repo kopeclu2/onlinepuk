@@ -28,10 +28,13 @@ import {
   addMatchOpen,
   addMatchClose,
   editingMatchOpen,
-  editingMatchClose
+  editingMatchClose,
+  usersOpen,
+  usersClose
 } from "../../actions/uiActions";
 import EditingMatch from "../../components/Admin/EditingMatch";
 import moment from "moment";
+import UsersRoles from "../../components/UsersRoles";
 const styles = theme => ({
   "@keyframes blinker": {
     from: { opacity: 1 },
@@ -85,10 +88,12 @@ function Content({
   addMatchClose,
   editMatch,
   editingMatchOpen,
-  editingMatchClose
+  editingMatchClose,
+  usersOpen,
+  usersClose,
+  usersOpenState
 }) {
   const [live, setlive] = useState(localStorage.getItem('LIVE_NOTIF'))
-  console.log('LIVE LCOAL', live)
   useEffect(() => loadMatches(), []);
   return (
     <Paper className={classes.paper}>
@@ -117,6 +122,14 @@ function Content({
                 >
                   <ArrowBackIcon />
                 </Button>
+              ) : usersOpenState ? (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => usersClose()}
+                >
+                  <ArrowBackIcon />
+                </Button>
               ) : (
                 <Button
                   variant="contained"
@@ -127,6 +140,14 @@ function Content({
                   Přidej zápas
                 </Button>
               )}
+              { !editMatch && !addMatch && !usersOpenState && (<Button
+                  variant="contained"
+                  onClick={() => usersOpen()}
+                  color="primary"
+                  className={classes.addUser}
+                >
+                  Uživatelé
+                </Button>) }
             </Grid>
           </Grid>
           <FormControlLabel
@@ -144,11 +165,16 @@ function Content({
         </Toolbar>
       </AppBar>
       <div className={classes.contentWrapper}>
-        {editMatch ? (
+        {editMatch && (
           <EditingMatch />
-        ) : addMatch ? (
+        ) }
+        { addMatch && (
           <CreateMatch />
-        ) : (
+        )}
+        { usersOpenState && (
+          <UsersRoles />
+        )}
+        {!editMatch && !addMatch && !usersOpenState && (
           <div>
             <MapMatchesForEdit matches={matches} deleteMatch={deleteMatch} editingMatchOpen={editingMatchOpen} classes={classes}/>
           </div>
@@ -166,7 +192,8 @@ export default connect(
   state => ({
     matches: state.matches.matches,
     addMatch: state.ui.addMatchBool,
-    editMatch: state.ui.editingMatch.bool
+    editMatch: state.ui.editingMatch.bool,
+    usersOpenState: state.ui.usersOpen
   }),
   {
     loadMatches,
@@ -174,6 +201,8 @@ export default connect(
     editingMatchClose,
     deleteMatch,
     addMatchOpen,
-    addMatchClose
+    addMatchClose,
+    usersClose,
+    usersOpen
   }
 )(withStyles(styles)(Content));

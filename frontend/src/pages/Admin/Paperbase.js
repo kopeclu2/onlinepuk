@@ -16,6 +16,7 @@ import {push} from 'connected-react-router'
 import {connect} from 'react-redux'
 import { Route, Redirect } from "react-router-dom";
 import {toast} from 'react-toastify'
+import { checkForValidUser } from "../../actions/checkForValidUser";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -172,7 +173,7 @@ const styles = {
 };
 
 function Paperbase(props) {
-  const { classes, push } = props;
+  const { classes, push, checkForValidUser } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -181,31 +182,10 @@ function Paperbase(props) {
   const [redirect,setRedirect] = useState(false)
   const [loading,setLoading] = useState(true)
   useEffect(()=>{
-    fetch(`http://localhost:4000/users/check`, {
-        method: "POST",
-        body: JSON.stringify({ token: localStorage.getItem("token") }),
-
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => {
-          if (res.status === 200) {
-            setLoading(false)
-            return res.json();
-          } else {
-            throw new Error();
-          }
-        })
-        .catch((err) => { if(err.text){console.log(err.text()); toast.warn('Něco se nezdařilo'); setRedirect(true)}});
+     checkForValidUser()
   },[])
 
-  if (redirect) return <Redirect to={{ pathname: "/login", state: { from: props.location } }} />
-  if(loading){
-    return null
-  }else {
+  
     return (
       <ThemeProvider theme={theme}>
         <div className={classes.root}>
@@ -222,7 +202,7 @@ function Paperbase(props) {
         </div>
       </ThemeProvider>
     );
-  }
+  
 
   
 }
@@ -231,4 +211,4 @@ Paperbase.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default connect(()=>({}),{push})(withStyles(styles)(Paperbase));
+export default connect(()=>({}),{push, checkForValidUser})(withStyles(styles)(Paperbase));

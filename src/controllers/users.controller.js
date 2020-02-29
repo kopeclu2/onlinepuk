@@ -6,15 +6,19 @@ import Role from '../_helpers/role'
 
 // routes
 router.post('/authenticate', authenticate);     // public route
-router.get('/', authorize(Role.Admin), getAll); // admin only
+router.get('/all', authorize(Role.Admin), getAll); // admin only
 router.get('/:id', authorize(), getById);
 router.post('/signup', signup)  
+router.post('/deleteUser',authorize(Role.Admin), deleteUser)  
 router.post('/check', checkToken) 
 router.post('/get/user/from/token', getUserFromToken)     // all authenticated users
 export default router;
 
 function getUserFromToken(req,res) {
     userService.getUserFromToken(req,res);
+} 
+function deleteUser(req,res) {
+    userService.deleteUser(req,res);
 } 
 function checkToken(req,res,next) {
     userService.checkValidToken(req,res)
@@ -33,10 +37,8 @@ function authenticate(req, res, next) {
         .catch(err => next(err));
 }
 
-function getAll(req, res, next) {
-    userService.getAll()
-        .then(users => res.json(users))
-        .catch(err => next(err));
+function getAll(req, res) {
+    userService.getAll(req,res)
 }
 
 function getById(req, res, next) {

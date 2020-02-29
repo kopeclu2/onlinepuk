@@ -22,3 +22,11 @@ export const setCurrentPagePaginationScheduled = (pageNumber) => ({
     type: 'SET_CURRENT_PAGE_PAGINATION_SCHEDULED',
     payload:pageNumber
 })
+
+export const usersOpen = () => ({
+    type: 'USERS_OPEN'
+})
+export const usersClose = () => ({
+    type: 'USERS_CLOSE'
+})
+

@@ -18,6 +18,8 @@ import deleteComment from "../actions/deleteComment"
 import { isEmpty } from "ramda";
 import { change } from "redux-form";
 import { createComment } from "../actions/createComment";
+import openSocket from "socket.io-client";
+const socket = openSocket.connect("http://localhost:4000");
 const useStyles = makeStyles(theme => ({
   root: {
     width: "100%"
@@ -37,13 +39,18 @@ const ChatRoom = ({
   const [text, changeText] = useState("");
   const [id, changeId] = useState(null);
   const classes = useStyles();
-  useEffect(() => {
-    loadComments();
-  }, []);
+ 
   const loadCommentToEdit = (id,value) => {
     changeText(value);
     changeId(id)
   }
+  const createCommentWS = () => {
+    socket.emit("createComment", {
+      token: localStorage.getItem("token"),
+      content: text,
+      user: user.sub
+    });
+  };
   return (
     <Container component="main" maxWidth="md">
       <CssBaseline />
@@ -71,7 +78,7 @@ const ChatRoom = ({
                   color="primary"
                   style={{ padding: "14.5px 14px" }}
                   onClick={e => {
-                    createComment(text);
+                    createCommentWS();
                     changeText('')
                   }}
                 >

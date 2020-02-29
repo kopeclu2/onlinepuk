@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { connect } from "react-redux";
 import { find, propEq } from "ramda";
 import { Container } from "@material-ui/core";
@@ -8,9 +8,10 @@ import FirstRowInfo from "./EditingMatch/FirstRowInfo";
 import openSocket from "socket.io-client";
 import ActionsCreate from "./EditingMatch/ActionsCreate";
 import ActionsMap from "./EditingMatch/ActionsMap";
+import { checkForValidUser } from "../../actions/checkForValidUser";
 const socket = openSocket.connect("http://localhost:4000");
 
-let EditingMatch = ({ match, matchValues }) => {
+let EditingMatch = ({ match, matchValues,checkForValidUser }) => {
   const scoreGoal = () => {
     socket.emit("goalScoreAdmin", {
       token: localStorage.getItem("token"),
@@ -31,6 +32,10 @@ let EditingMatch = ({ match, matchValues }) => {
       finishedValue: finished
     });
   };
+  useEffect(() => {
+  
+      checkForValidUser()
+  }, []);
   return (
     <Container maxWidth="sm">
       <form >
@@ -61,6 +66,6 @@ EditingMatch = connect(state => ({
   },
   
   match: find(propEq("id", state.ui.editingMatch.id), state.matches.matches)
-}))(EditingMatch);
+}),{checkForValidUser})(EditingMatch);
 
 export default EditingMatch;

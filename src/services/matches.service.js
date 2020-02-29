@@ -113,8 +113,9 @@ const createMatch = (req, res) => {
 };
 const setLiveMatch = (match,liveValue) => (new Promise((res,rej) => {
   const value = liveValue ? 1 : 0;
+  const neg = liveValue ? 0: 1
   console.log(value, match.id)
-    db.connection.query('UPDATE matches SET live = ? WHERE id = ?',[value,match.id], (err,result) => {
+    db.connection.query('UPDATE matches SET live = ?, finished = ? WHERE id = ?',[value,neg,match.id], (err,result) => {
       if(err) {
         console.log(err)
         rej()

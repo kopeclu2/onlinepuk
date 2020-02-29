@@ -26,6 +26,7 @@ import { loadTeams } from "./actions/teams.js";
 import {loadUserFromToken} from './actions/loadUserFromToken.js'
 import KWD_LOGO from './kwd_logo.png'
 import ChatRoom from "./pages/ChatRooms";
+import loadComments, { addAllcoments } from "./actions/loadComments";
 var moment = require('moment');
 moment.locale('cs');
 const socket = openSocket.connect("http://localhost:4000");
@@ -41,6 +42,9 @@ class App extends Component {
     socket.on("goal", match => {
       this.props.updateAfterGoalSocket(match);
     });
+    socket.on("ALL_COMMENTS", docs => {
+      this.props.addAllcoments(docs)
+    })
     socket.on("liveSucces", match => {
       this.props.liveSuccessMatch(match);
     });
@@ -49,6 +53,7 @@ class App extends Component {
       this.props.finishedMatch(match);
     });
     this.props.loadTeams();
+    this.props.loadComments()
   }
   render() {
     return (
@@ -80,7 +85,7 @@ class App extends Component {
 
 export default connect(
   state => ({ matchesLoaded: state.matches.matchesLoaded }),
-  { liveSuccessMatch, loadTeams, updateAfterGoalSocket,loadUserFromToken, finishedMatch, loadMatches }
+  { liveSuccessMatch,loadComments, loadTeams,addAllcoments, updateAfterGoalSocket,loadUserFromToken, finishedMatch, loadMatches }
 )(App);
 
 /*
