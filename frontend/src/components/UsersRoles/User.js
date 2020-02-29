@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {TableCell, Select,Avatar, MenuItem,IconButton, TableRow}from '@material-ui/core'
 import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
+import SaveIcon from "@material-ui/icons/Save";
 import roles from '../../utils/roles';
 import {deleteUser} from '../../actions/Admin/deleteUser'
 import {connect} from 'react-redux'
-const User = ({user,deleteUser}) => {
+import { setRoleToUser } from '../../actions/Admin/setRoleToUser';
+const User = ({user,deleteUser,setRoleToUser}) => {
     
     const [role, setRole] = useState(user.role)
     useEffect(()=> {
@@ -34,9 +35,12 @@ const User = ({user,deleteUser}) => {
           </Select>
         </TableCell>
         <TableCell align="center">
-          <IconButton>
-            <EditIcon color="primary" />
-          </IconButton>
+           <IconButton>
+           {role !== user.role && <SaveIcon onClick={()=>{
+             setRoleToUser(user._id, role)
+           }}color="primary" />}
+          </IconButton> 
+          
           <IconButton onClick={()=> deleteUser(user._id)}>
             <DeleteIcon color="secondary" />
           </IconButton>
@@ -45,5 +49,6 @@ const User = ({user,deleteUser}) => {
 }
  
 export default connect(()=>({}),{
-    deleteUser
+    deleteUser,
+    setRoleToUser
 })(User);

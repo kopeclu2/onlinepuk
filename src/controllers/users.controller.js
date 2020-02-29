@@ -10,6 +10,7 @@ router.get('/all', authorize(Role.Admin), getAll); // admin only
 router.get('/:id', authorize(), getById);
 router.post('/signup', signup)  
 router.post('/deleteUser',authorize(Role.Admin), deleteUser)  
+router.post('/setUserRole',authorize(Role.Admin), setUserRole) 
 router.post('/check', checkToken) 
 router.post('/get/user/from/token', getUserFromToken)     // all authenticated users
 export default router;
@@ -17,6 +18,9 @@ export default router;
 function getUserFromToken(req,res) {
     userService.getUserFromToken(req,res);
 } 
+function setUserRole(req,res){
+    userService.setUserRole(req,res);
+}
 function deleteUser(req,res) {
     userService.deleteUser(req,res);
 } 

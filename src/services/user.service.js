@@ -34,7 +34,8 @@ export default {
   signUp,
   checkValidToken,
   getUserFromToken,
-  deleteUser
+  deleteUser,
+  setUserRole
 };
 
 function checkValidToken(req, res) {
@@ -80,6 +81,15 @@ function getUserFromToken(req, res) {
       });
     }
   });
+}
+function setUserRole(req, res){
+  User.findByIdAndUpdate(req.body._id,{role: req.body.role},(err,user) => {
+    if(!err) {
+      getAll(req,res)
+    }else {
+      res.status(400).send({message: 'Nepodarilo se aktualizovat uzivatele'})
+    }
+  })
 }
 function deleteUser(req,res) {
   User.findOneAndDelete({_id: req.body._id},(err, user) => {
