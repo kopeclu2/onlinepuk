@@ -59,21 +59,7 @@ const MatchInfo = ({
             spacing={2}
             style={{ marginTop: "10px" }}
           >
-            <Grid item xs={6} md={4}>
-              <Field
-                name={"matchState"}
-                component={TextFieldText}
-                label={"Stav zapasu"}
-              />
-            </Grid>
-
-            <Grid item xs={6} md={4}>
-              <Field
-                name={"stadion"}
-                component={TextFieldText}
-                label={"Stadion"}
-              />
-            </Grid>
+           
             <Grid item xs={6} md={2}>
               <FormControlLabel
                 control={
@@ -130,3 +116,19 @@ const MatchInfo = ({
 };
 
 export default connect(() => ({}), { updateMatchInfo })(MatchInfo);
+/*
+ <Grid item xs={6} md={4}>
+              <Field
+                name={"matchState"}
+                component={TextFieldText}
+                label={"Stav zapasu"}
+              />
+            </Grid>
+
+            <Grid item xs={6} md={4}>
+              <Field
+                name={"stadion"}
+                component={TextFieldText}
+                label={"Stadion"}
+              />
+            </Grid>*/

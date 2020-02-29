@@ -3,7 +3,7 @@ import React, { Component, useEffect } from "react";
 import { getMatchById, loadMatches } from "../actions/matches";
 import moment from "moment";
 import HockeyRing from "../utils/hockey-pitch.png";
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme } from "@material-ui/core/styles";
 import {
   Container,
   Grid,
@@ -19,12 +19,13 @@ import {
 import { isNil, isEmpty } from "ramda";
 import MatchActionHome from "../components/Match/MatchActionHome";
 import MatchActionHost from "../components/Match/MatchActionHost";
+import PeriodMatch from "../components/Match/PeriodMatch";
 
 const useStyles = makeStyles(theme => ({
-  '@keyframes blinker': {
-    from: {opacity: 1},
-    to: {opacity: 0}
-},
+  "@keyframes blinker": {
+    from: { opacity: 1 },
+    to: { opacity: 0 }
+  },
   teamsText: {
     color: theme.palette.text.secondary,
     textAlign: "center"
@@ -34,11 +35,11 @@ const useStyles = makeStyles(theme => ({
     height: theme.spacing(10)
   },
   blinkingText: {
-    animationName: '$blinker',
-    animationDuration: '1s',
-    animationTimingFunction: 'linear',
-    animationIterationCount:'infinite',
-    color:'red'
+    animationName: "$blinker",
+    animationDuration: "1s",
+    animationTimingFunction: "linear",
+    animationIterationCount: "infinite",
+    color: "red"
   }
 }));
 
@@ -53,18 +54,20 @@ const MatchDetail = ({ match, matchDetail, matches, width }) => {
     alignItems: "center"
   };
   const theme = useTheme();
-  const xs = useMediaQuery(theme.breakpoints.down('sm'));
+  const xs = useMediaQuery(theme.breakpoints.down("sm"));
   const materialClasses = useStyles();
   const matchNew = !isEmpty(matches)
     ? matches.find(obj => obj.id === Number(match.params.id))
     : {};
   const renderActions = matchDetail => (
-    <Grid container spacing={0} direction={"row"} style={{ marginTop: "70px" }}>
+    <Grid container spacing={0} direction={"row"} style={{ marginTop: "30px" }}>
       {matchDetail.actions.map(action =>
         action.teamHomeOrHost === 1 ? (
           <MatchActionHome action={action} />
-        ) : (
+        ) : action.teamHomeOrHost === 2 ? (
           <MatchActionHost action={action} />
+        ) : (
+          <PeriodMatch action={action} />
         )
       )}
     </Grid>
@@ -80,7 +83,7 @@ const MatchDetail = ({ match, matchDetail, matches, width }) => {
           />
         </Grid>
         <Grid item xs style={classes}>
-        <Grid
+          <Grid
             container
             style={classes}
             direction="column"
@@ -94,18 +97,30 @@ const MatchDetail = ({ match, matchDetail, matches, width }) => {
               justify="center"
               alignItems="center"
             >
-              <Typography variant={"h2"}>{matchDetail.live === 0 && matchDetail.finished === 0 ? <div style={{marginRight: "15px"}}>{xs  ?'-'  : '—' }</div> :matchDetail.scoreHome}</Typography>
+              <Typography variant={"h2"}>
+                {matchDetail.live === 0 && matchDetail.finished === 0 ? (
+                  <div style={{ marginRight: "15px" }}>{xs ? "-" : "—"}</div>
+                ) : (
+                  matchDetail.scoreHome
+                )}
+              </Typography>
               <Typography variant={"h2"}>:</Typography>
-              <Typography variant={"h2"}>{matchDetail.live === 0 && matchDetail.finished === 0 ? <div style={{marginLeft: "15px"}}>{xs  ? '-'  : '—' }</div> :matchDetail.scoreHost}</Typography>
+              <Typography variant={"h2"}>
+                {matchDetail.live === 0 && matchDetail.finished === 0 ? (
+                  <div style={{ marginLeft: "15px" }}>{xs ? "-" : "—"}</div>
+                ) : (
+                  matchDetail.scoreHost
+                )}
+              </Typography>
             </Grid>
             {matchDetail.live === 1 && (
               <Grid item>
                 <Typography
                   variant={"body1"}
                   className={materialClasses.blinkingText}
-                  style={{ alignItems: "center", fontSize:'0.8rem' }}
+                  style={{ alignItems: "center", fontSize: "0.8rem" }}
                 >
-                 ● LIVE
+                  ● LIVE
                 </Typography>
               </Grid>
             )}
@@ -113,9 +128,9 @@ const MatchDetail = ({ match, matchDetail, matches, width }) => {
               <Grid item>
                 <Typography
                   variant={"h6"}
-                  style={{ alignItems: "center", fontSize:'0.8rem' }}
+                  style={{ alignItems: "center", fontSize: "0.8rem" }}
                 >
-                 Dohráno
+                  Dohráno
                 </Typography>
               </Grid>
             )}
@@ -158,7 +173,7 @@ const MatchDetail = ({ match, matchDetail, matches, width }) => {
     );
   };
   return !isNil(matchDetail) ? (
-    <div style={{ backgroundColor: "#f5f5f5", paddingBottom:'120px' }}>
+    <div style={{ backgroundColor: "#f5f5f5", paddingBottom: "120px" }}>
       <WidthWrapper>
         {renderMatchInfo(matchDetail)}
         {renderActions(matchDetail)}

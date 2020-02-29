@@ -27,6 +27,7 @@ import {loadUserFromToken} from './actions/loadUserFromToken.js'
 import KWD_LOGO from './kwd_logo.png'
 import ChatRoom from "./pages/ChatRooms";
 import loadComments, { addAllcoments } from "./actions/loadComments";
+
 var moment = require('moment');
 moment.locale('cs');
 const socket = openSocket.connect("http://localhost:4000");

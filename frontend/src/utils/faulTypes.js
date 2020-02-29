@@ -27,4 +27,4 @@ const convertArrayToObject = (array) => {
     }, initialValue);
   };
 
-export default convertArrayToObject(fauls);
+export default fauls;

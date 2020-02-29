@@ -14,7 +14,7 @@ import {
 } from "../../../actions/actionsMatch";
 import { connect } from "react-redux";
 import { values } from "ramda";
-import matchActions from "../../../utils/matchActions";
+import matchActions, { otherSymbols, periodActions } from "../../../utils/matchActions";
 import ActionsMap from "./ActionsMap";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -22,6 +22,9 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import faulsTypes from '../../../utils/faulTypes.js'
+import { generalTypes } from "../../../utils/generalTypes";
+import {goalActions} from '../../../utils/matchActions'
+import { goalTypes } from "../../../utils/goalTypes";
 const useStyles = makeStyles(theme => ({
   teamsText: {
     color: theme.palette.text.secondary,
@@ -41,11 +44,12 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
   const [teamHomeOrHost, setteamHomeOrHost] = useState(1);
   const [time, settime] = useState("");
   const [seconds, setseconds] = useState("");
-  const [type, settype] = useState(1);
+  const [type, settype] = useState(0);
   const [content, setcontent] = useState("");
   const [actionID, setActionID] = useState(0);
   const [editing, setEditing] = useState(false);
   const [faulTypes, setFaulType] = useState(0)
+  const [generalType, setgeneralType] = useState(0)
 
   const loadInitDataAction = action => {
     setteamHomeOrHost(action.teamHomeOrHost);
@@ -56,6 +60,7 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
     setActionID(action.matchactions_id);
     setEditing(true);
     setFaulType(action.faulType)
+    setgeneralType(action.generalType)
   };
 
   const clearForm = () => {
@@ -68,6 +73,16 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
     setEditing(false);
     setFaulType(0)
   };
+  const changeGeneralType = (e) => {
+     const gType =  e.target.value
+      setgeneralType(gType)
+      if(gType ===2){
+        setteamHomeOrHost(3) //obecny
+      } else {
+        setteamHomeOrHost(1)
+      }
+  }
+
   return (
     <div>
       <ExpansionPanel>
@@ -91,7 +106,22 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
             spacing={0}
             style={{ marginTop: "10px" }}
           >
-            <Grid item xs={4} md={2}>
+            <Grid item xs={4} md={4}>
+              <Select
+                variant={"outlined"}
+                type={"text"}
+                label={"Tým"}
+                onChange={changeGeneralType}
+                fullWidth
+                value={generalType}
+                size="small"
+              >
+                {generalTypes.map((type) => <MenuItem value={type.id}>
+                  {type.desc}
+                </MenuItem>)}
+              </Select>
+            </Grid>
+            <Grid item xs={4} md={4}>
               <Select
                 variant={"outlined"}
                 type={"text"}
@@ -101,14 +131,18 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
                 value={teamHomeOrHost}
                 size="small"
               >
-                <MenuItem value={1}>
+                {generalType === 2 && <MenuItem value={3}>
+                  {'Obecny'}
+                </MenuItem> }
+                {generalType !== 2 && 
+                [<MenuItem value={1}>
                   {
                     <Avatar
                       src={match.teamHome.img}
                       className={classes.small}
                     />
                   }
-                </MenuItem>
+                </MenuItem>,            
                 <MenuItem value={2}>
                   {
                     <Avatar
@@ -116,10 +150,11 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
                       className={classes.small}
                     />
                   }
-                </MenuItem>
+                </MenuItem>]
+                }
               </Select>
             </Grid>
-            <Grid item xs={4} md={3}>
+            <Grid item xs={4} md={4}>
               <Select
                 value={type}
                 variant={"outlined"}
@@ -129,12 +164,21 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
                 fullWidth
                 size="small"
               >
-                {values(matchActions).map((action, index) => (
-                  <MenuItem value={index}>{action}</MenuItem>
+                {generalType === 0 && goalActions.map((action, index) => (
+                  <MenuItem value={index}>{action.desc}</MenuItem>
+                ))}
+                {generalType === 1 && matchActions.map((action, index) => (
+                  <MenuItem value={index}>{action.desc}</MenuItem>
+                ))}
+                {generalType === 2 && periodActions.map((action, index) => (
+                  <MenuItem value={index}>{action.desc}</MenuItem>
+                ))}
+                {generalType === 3 && otherSymbols.map((action, index) => (
+                  <MenuItem value={index}>{action.desc}</MenuItem>
                 ))}
               </Select>
             </Grid>
-            <Grid item xs={4} md={3}>
+            <Grid item xs={4} md={4}>
               <Select
                 value={faulTypes}
                 variant={"outlined"}
@@ -144,12 +188,13 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
                 fullWidth
                 size="small"
               >
-                {values(faulsTypes).map((action, index) => (
+                {generalType === 0 && goalTypes.map((type)=> <MenuItem value={type.id}>{type.desc}</MenuItem>)}
+                { generalType === 1 && faulsTypes.map((action, index) => (
                   <MenuItem value={index}>{action}</MenuItem>
                 ))}
               </Select>
             </Grid>
-            <Grid item xs={6} md={3}>
+            <Grid item xs={4} md={4}>
               <TextField
                 onChange={e => settime(e.target.value)}
                 variant={"outlined"}
@@ -159,7 +204,7 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
                 value={time}
               />{" "}
             </Grid>
-            <Grid item xs={6} md={3}>
+            <Grid item xs={4} md={4}>
               <TextField
                 onChange={e => setseconds(e.target.value)}
                 variant={"outlined"}
@@ -196,7 +241,8 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
                         type,
                         match_id: match.id,
                         faulTypes,
-                        matchactions_id: actionID
+                        matchactions_id: actionID,
+                        generalType
                       })
                     : createActionMatch({
                         teamHomeOrHost,
@@ -205,7 +251,8 @@ const ActionsCreate = ({ match, createActionMatch, editActionMatch }) => {
                         content,
                         type,
                         faulTypes,
-                        match_id: match.id
+                        match_id: match.id,
+                        generalType
                       });
                   clearForm();
                 }}
