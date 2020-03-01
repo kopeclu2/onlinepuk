@@ -19,13 +19,14 @@ const DBHerokuOne = {
   password: "baf1a3a1",
   database: "heroku_830860e9211f00b"
 }
+
 const herokuOnlinePuk2 = {
   host     : 'eu-cdbr-west-02.cleardb.net',
   user     : 'bb0fcff5eb8769',
   password : '3109bf24',
   database : 'heroku_6b93634abffb7e6'
 }
-export const conectionObj = process.env.NODE_ENV ==='production' ? DBHerokuOne : localConnection;
+export const conectionObj = process.env.NODE_ENV ==='production' ? DBHerokuOne : DBHerokuOne;
 var connection= mysql.createConnection(conectionObj);
 const connect = () => {
   connection = mysql.createConnection(conectionObj);

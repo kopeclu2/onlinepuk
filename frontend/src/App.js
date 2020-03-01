@@ -30,7 +30,7 @@ import loadComments, { addAllcoments } from "./actions/loadComments";
 
 var moment = require('moment');
 moment.locale('cs');
-const socket = openSocket.connect("/");
+const socket = openSocket.connect(process.env.NODE_ENV === 'production' ? 'https://onlinepuk.herokuapp.com' : '/');
 socket.on('connect', function(){
   'CONNECTION SUCCESS'
 });

@@ -3,7 +3,7 @@ import { isEmpty } from "ramda";
 import teamsService from "../services/teams.service";
 import commentService from "../services/comment.service";
 import actionsService from "./matchActions.service";
-
+import logger from 'heroku-logger'
 const arrayToPush = new Array();
 
 const selectAllFromMatches = () => {
@@ -105,12 +105,15 @@ const createMatch = (req, res) => {
   } = req.body;
   db.connection.query(
     "INSERT INTO matches(name,teamHome,teamHost,scoreHome,scoreHost,date,matchState,finished,stadion) VALUES (?,?,?,?,?,?,?,?,?)",
-    [name, teamHome, teamHost, scoreHome, scoreHost, date, matchState,0,'DEFAULT VALUE'],
+    [name, teamHome, teamHost, scoreHome, scoreHost, date,0, 0,''],
     (err, result, fields) => {
       if(err) {
+        logger.error('ZAPAS ERRROR', err)
         res.status(400).send({message: 'Nepodařilo se přidat zápas'})
+      } else {
+        getAllMatches(req, res);
       }
-      getAllMatches(req, res);
+      
     }
   );
 };
