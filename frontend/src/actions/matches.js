@@ -5,13 +5,13 @@ const loadingMatchesPending = () => ({type:'LOADING_MATCHES_PENDING'})
 
 export const loadMatches = () => (dispatch) => {
     dispatch(loadingMatchesPending())
-    Axios.get('http://localhost:4000/matches')
+    Axios.get('http://localhost:80/matches')
     .then(({data}) => {
         dispatch({type:'LOADING_MATCHES', payload: data})
         dispatch({type: 'LOADING_MATCHES_FINISH'})
     })
     .catch((err) => {})
-    Axios.get('http://localhost:4000/matches/finished')
+    Axios.get('http://localhost:8080/matches/finished')
     .then(({data}) =>{
         dispatch({type:'LOADING_MATCHES_FINSIHED', payload: data})
     })
