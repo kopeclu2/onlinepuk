@@ -30,7 +30,7 @@ import loadComments, { addAllcoments } from "./actions/loadComments";
 
 var moment = require('moment');
 moment.locale('cs');
-const socket = openSocket.connect("http://localhost:4000");
+const socket = openSocket.connect("/");
 socket.on('connect', function(){
   'CONNECTION SUCCESS'
 });
