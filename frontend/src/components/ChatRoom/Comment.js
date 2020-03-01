@@ -23,7 +23,7 @@ import EditSection from "./EditSection";
 import Answer from "./Answer";
 import openSocket from "socket.io-client";
 import { isNil } from "ramda";
-const socket = openSocket.connect("http://localhost:4000");
+const socket = openSocket.connect(process.env.NODE_ENV === 'production' ? 'https://onlinepuk.herokuapp.com/' : '/');
 
 const useStyles = makeStyles(theme => ({
   root: {

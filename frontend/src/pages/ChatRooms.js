@@ -19,7 +19,7 @@ import { isEmpty } from "ramda";
 import { change } from "redux-form";
 import { createComment } from "../actions/createComment";
 import openSocket from "socket.io-client";
-const socket = openSocket.connect("http://localhost:4000");
+const socket = openSocket.connect(process.env.NODE_ENV === 'production' ? 'https://onlinepuk.herokuapp.com/' : '/');
 const useStyles = makeStyles(theme => ({
   root: {
     width: "100%"
