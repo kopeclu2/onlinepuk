@@ -6,6 +6,11 @@ import authorize from "../_helpers/authorize";
 import Role from "../_helpers/role";
 
 router.get("", (req, res) => {
+  return res.send([
+    {
+      mesg: 'ahoj'
+    }
+  ])
   matchService.getAllMatches(req, res);
 });
 router.get("/finished", (req, res) => {
