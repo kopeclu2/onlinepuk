@@ -18,7 +18,7 @@ export const loginSucces = (data) => ({
 })
 export const login = (username,password) => (dispatch) => {
     dispatch(loginPending())
-    Axios.post('http://localhost:4000/users/authenticate', { username, password   })
+    Axios.post('/users/authenticate', { username, password   })
     .then(({data}) => {
         dispatch(loginSucces(data))
         localStorage.setItem('token', data.token)

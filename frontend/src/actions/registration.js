@@ -5,7 +5,7 @@ import {loginSucces} from './login'
 
 export const registration = (values) => async(dispatch,getState) => {
     dispatch({type:'REGISTRATION_LOADING'})
-    Axios.post('http://localhost:4000/users/signup', {
+    Axios.post('/users/signup', {
             ...values
     }).then((data) => {
         dispatch(loginSucces(data))

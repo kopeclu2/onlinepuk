@@ -35,7 +35,8 @@ socket.on('connect', function(){
   'CONNECTION SUCCESS'
 });
 export const history = createBrowserHistory();
-
+console.log(process.env.NODE_ENV)
+console.log(window.location.origin)
 toast.configure();
 class App extends Component {
   componentDidMount() {
