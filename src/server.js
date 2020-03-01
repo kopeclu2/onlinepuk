@@ -26,7 +26,7 @@ const mongoose = require("mongoose");
 
 const uri =
   "mongodb+srv://Lukasek:Monstercar494@onlinepuk-9lent.mongodb.net/test?retryWrites=true&w=majority";
-
+/*
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -39,6 +39,7 @@ dbMongo.once("opne", () => {
 dbMongo.on("error", err => {
   console.log(err);
 });
+*/
 var serverIO = http.createServer(app);
 const io = socketio(serverIO);
 /*
