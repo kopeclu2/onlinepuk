@@ -1,7 +1,7 @@
 import {toast} from 'react-toastify'
 export const createActionMatch = (action) => (dispatch, getState) => {
     const {user} = getState();
-    fetch('http://localhost:4000/actions/addAction', {
+    fetch('/actions/addAction', {
         method: 'POST', body: JSON.stringify(action),
          headers: {
             Authorization: `Bearer ${user.token}`,
@@ -23,7 +23,7 @@ export const createActionMatch = (action) => (dispatch, getState) => {
 
 export const editActionMatch = (action) => (dispatch, getState) => {
     const {user} = getState();
-    fetch('http://localhost:4000/actions/editAction', {
+    fetch('/actions/editAction', {
         method: 'POST', body: JSON.stringify(action),
          headers: {
             Authorization: `Bearer ${user.token}`,
@@ -44,7 +44,7 @@ export const editActionMatch = (action) => (dispatch, getState) => {
 }
 export const deleteActionMatch = (action) => (dispatch, getState) => {
     const {user} = getState();
-    fetch('http://localhost:4000/actions/deleteAction', {
+    fetch('/actions/deleteAction', {
         method: 'POST', body: JSON.stringify(action),
          headers: {
             Authorization: `Bearer ${user.token}`,

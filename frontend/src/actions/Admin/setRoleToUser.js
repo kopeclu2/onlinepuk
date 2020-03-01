@@ -1,7 +1,7 @@
 import {toast} from 'react-toastify'
 export const setRoleToUser = (_id, role) => (dispatch, getState) => {
   const { user } = getState();
-  fetch("http://localhost:4000/users/setUserRole", {
+  fetch("/users/setUserRole", {
     method: "POST",
     body: JSON.stringify({
       _id: _id,

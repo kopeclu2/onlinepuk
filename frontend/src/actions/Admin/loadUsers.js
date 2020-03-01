@@ -3,7 +3,7 @@
 export const loadUsers = () => (dispatch,getState) => {
     dispatch({type: 'LOADING_USERS'})
     const {user} = getState();
-    fetch('http://localhost:4000/users/all', {
+    fetch('/users/all', {
         method: 'GET', 
          headers: {
             Authorization: `Bearer ${user.token}`,

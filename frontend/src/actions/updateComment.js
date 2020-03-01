@@ -2,7 +2,7 @@ import axios from "axios";
 
 const updateComment = (id, value) => async (dispatch, getState) => {
   const { user } = getState();
-  fetch("http://localhost:4000/chatRoom/updateComment", {
+  fetch("/chatRoom/updateComment", {
     method: "POST",
     body: JSON.stringify({
       _id: id,

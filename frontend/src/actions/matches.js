@@ -20,7 +20,7 @@ export const loadMatches = () => (dispatch) => {
 
 export const getMatchById = (id) => (dispatch) => {
     dispatch({type: 'LOADING_MATCH'})
-    Axios.get(`http://localhost:4000/matches/${id}`)
+    Axios.get(`/matches/${id}`)
     .then(({data}) => {
         dispatch({type: 'LOADED_MATCH', payload: data})
         dispatch({type: 'LOADING_MATCH_DETAIL_FINISHED'})
@@ -29,7 +29,7 @@ export const getMatchById = (id) => (dispatch) => {
 }
 export const deleteMatch = (id) => (dispatch, getState) => {
     const { user } = getState();
-    fetch(`http://localhost:4000/matches/${id}/delete`, {
+    fetch(`/matches/${id}/delete`, {
         method: 'DELETE',
          headers: {
             Authorization: `Bearer ${user.token}`,
@@ -48,7 +48,7 @@ export const deleteMatch = (id) => (dispatch, getState) => {
 
 export const updateMatchInfo = (id) => (dispatch,getState) => {
     const { user, form: {editingMatch: {values}} } = getState();
-    fetch(`http://localhost:4000/matches/${id}/edit`, {
+    fetch(`/matches/${id}/edit`, {
         method: 'POST',
          headers: {
             Authorization: `Bearer ${user.token}`,

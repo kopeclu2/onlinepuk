@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 export const createComment = value => (dispatch, getState) => {
   const { user } = getState();
-  fetch("http://localhost:4000/chatRoom/create", {
+  fetch("/chatRoom/create", {
     method: "POST",
     body: JSON.stringify({
       content: value,

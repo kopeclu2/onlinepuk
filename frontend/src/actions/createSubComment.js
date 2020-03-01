@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 const createSubComment = (parrentID,content) => (dispatch, getState) => {
     console.log()
     const { user } = getState();
-    fetch("http://localhost:4000/chatRoom/createSubComment", {
+    fetch("/chatRoom/createSubComment", {
       method: "POST",
       body: JSON.stringify({
         parrentID: parrentID,

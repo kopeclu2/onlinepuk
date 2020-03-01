@@ -10,7 +10,7 @@ export const loadUserFromToken = () => (dispatch, getState) => {
   }
   const request = axios({
     method: "POST",
-    url: "http://localhost:4000/users/get/user/from/token",
+    url: "/users/get/user/from/token",
     data: { token: token }
   });
   request

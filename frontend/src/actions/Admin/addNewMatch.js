@@ -4,7 +4,7 @@ import {addMatchClose} from '../../actions/uiActions'
 export const addNewMatch = (match) => (dispatch, getState) => {
     const { user } = getState();
     dispatch({ type: 'ADDING_MATCH' })
-    fetch('http://localhost:4000/matches/create', {
+    fetch('/matches/create', {
         method: 'POST', body: JSON.stringify(match),
          headers: {
             Authorization: `Bearer ${user.token}`,

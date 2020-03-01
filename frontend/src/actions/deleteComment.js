@@ -2,7 +2,7 @@ import axios from "axios";
 
 const deleteComment = (id) => async (dispatch, getState) => {
   const { user } = getState();
-  fetch("http://localhost:4000/chatRoom/delete", {
+  fetch("/chatRoom/delete", {
     method: "POST",
     body: JSON.stringify({
       _id: id

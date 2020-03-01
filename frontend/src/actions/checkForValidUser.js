@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { logout } from "./login";
 
 export const checkForValidUser = () => (dispatch, getState) => {
-  fetch(`http://localhost:4000/users/check`, {
+  fetch(`/users/check`, {
     method: "POST",
     body: JSON.stringify({ token: localStorage.getItem("token") }),
 

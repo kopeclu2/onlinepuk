@@ -2,7 +2,7 @@
 
 export const deleteUser = (id) => (dispatch,getState) => {
     const {user} = getState();
-    fetch('http://localhost:4000/users/deleteUser', {
+    fetch('/users/deleteUser', {
         method: 'POST', 
         body : JSON.stringify({
             _id: id
