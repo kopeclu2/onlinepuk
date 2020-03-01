@@ -31,7 +31,9 @@ import loadComments, { addAllcoments } from "./actions/loadComments";
 var moment = require('moment');
 moment.locale('cs');
 const socket = openSocket.connect("http://localhost:4000");
-
+socket.on('connect', function(){
+  'CONNECTION SUCCESS'
+});
 export const history = createBrowserHistory();
 
 toast.configure();
@@ -47,6 +49,7 @@ class App extends Component {
       this.props.addAllcoments(docs)
     })
     socket.on("liveSucces", match => {
+      console.log('LIVE')
       this.props.liveSuccessMatch(match);
     });
     socket.on("finishedSuccess", match => {

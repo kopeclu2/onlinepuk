@@ -11,7 +11,7 @@ export const loadMatches = () => (dispatch) => {
         dispatch({type: 'LOADING_MATCHES_FINISH'})
     })
     .catch((err) => {})
-    Axios.get('/matches')
+    Axios.get('/matches/finished')
     .then(({data}) =>{
         dispatch({type:'LOADING_MATCHES_FINSIHED', payload: data})
     })

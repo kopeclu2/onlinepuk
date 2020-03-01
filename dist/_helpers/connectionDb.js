@@ -9,6 +9,8 @@ exports["default"] = exports.conectionObj = void 0;
 
 var _mysql = _interopRequireDefault(require("mysql"));
 
+var _herokuLogger = _interopRequireDefault(require("heroku-logger"));
+
 var prodConnection = {
   host: 'eu-cdbr-west-02.cleardb.net',
   user: 'bb0fcff5eb8769',
@@ -33,17 +35,27 @@ exports.conectionObj = conectionObj;
 var connection = _mysql["default"].createConnection(localConnection);
 
 var connect = function connect() {
+  connection = _mysql["default"].createConnection(localConnection);
   connection.connect(function (err) {
     if (err) {
-      console.error('error connecting: ' + err.stack);
+      _herokuLogger["default"].error('error connecting: ' + err.stack);
+
+      setTimeout(function () {
+        connect();
+      }, 2000);
       return;
     }
 
-    console.log('connected as id ' + connection.threadId);
+    connection.on('error', function () {
+      _herokuLogger["default"].error('ERROR databse mySQL closed');
+
+      connection.end();
+      connect();
+    });
+
+    _herokuLogger["default"].info('MYSQL 1 connected as id ' + connection.threadId);
   });
 };
-
-var connect2 = function connect2() {};
 
 var _default = {
   connect: connect,

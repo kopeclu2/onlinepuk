@@ -11,8 +11,6 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _connectionDb = _interopRequireDefault(require("../_helpers/connectionDb"));
@@ -25,13 +23,35 @@ var _comment = _interopRequireDefault(require("../services/comment.service"));
 
 var _matchActions = _interopRequireDefault(require("./matchActions.service"));
 
-var _connectionDb2 = require("../_helpers/connectionDb2");
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 var arrayToPush = new Array();
+
+var selectAllFromMatches = function selectAllFromMatches() {
+  return new Promise(function (res, rej) {
+    _connectionDb["default"].connection.query("SELECT * FROM matches ORDER BY date", [], function (err, result) {
+      if (!err) {
+        res(result);
+      } else {
+        rej();
+      }
+    });
+  });
+};
+
+var selectAllFromMatchesFinished = function selectAllFromMatchesFinished() {
+  return new Promise(function (res, rej) {
+    _connectionDb["default"].connection.query("SELECT * FROM matches WHERE finished = 1 ORDER BY date", [], function (err, result) {
+      if (!err) {
+        res(result);
+      } else {
+        rej();
+      }
+    });
+  });
+};
 
 var getAllMatches =
 /*#__PURE__*/
@@ -39,59 +59,50 @@ function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee(req, res) {
-    var _ref2, _ref3, rows, fields, err, a, arr, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, team, _ref4, _ref5, teamHome, _ref6, _ref7, teamHost, userMessages, actions;
+    var rows, arr, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, team, teamHome, teamHost, userMessages, actions;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return _connectionDb2.promisePool.query("SELECT * FROM matches ORDER BY date");
+            return selectAllFromMatches();
 
           case 2:
-            _ref2 = _context.sent;
-            _ref3 = (0, _slicedToArray2["default"])(_ref2, 4);
-            rows = _ref3[0];
-            fields = _ref3[1];
-            err = _ref3[2];
-            a = _ref3[3];
+            rows = _context.sent;
             arr = new Array();
             _iteratorNormalCompletion = true;
             _didIteratorError = false;
             _iteratorError = undefined;
-            _context.prev = 12;
+            _context.prev = 7;
             _iterator = rows[Symbol.iterator]();
 
-          case 14:
+          case 9:
             if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              _context.next = 36;
+              _context.next = 27;
               break;
             }
 
             team = _step.value;
-            _context.next = 18;
-            return _connectionDb2.promisePool.query("SELECT * FROM teams WHERE id =?", [team.teamHome]);
+            _context.next = 13;
+            return _teams["default"].getTeamById(team.teamHome);
 
-          case 18:
-            _ref4 = _context.sent;
-            _ref5 = (0, _slicedToArray2["default"])(_ref4, 1);
-            teamHome = _ref5[0];
-            _context.next = 23;
-            return _connectionDb2.promisePool.query("SELECT * FROM teams WHERE id =?", [team.teamHost]);
+          case 13:
+            teamHome = _context.sent;
+            _context.next = 16;
+            return _teams["default"].getTeamById(team.teamHost);
 
-          case 23:
-            _ref6 = _context.sent;
-            _ref7 = (0, _slicedToArray2["default"])(_ref6, 1);
-            teamHost = _ref7[0];
-            _context.next = 28;
+          case 16:
+            teamHost = _context.sent;
+            _context.next = 19;
             return _comment["default"].getTeamsUsersComments(team.id);
 
-          case 28:
+          case 19:
             userMessages = _context.sent;
-            _context.next = 31;
+            _context.next = 22;
             return _matchActions["default"].getActionsOfMatchById(team.id);
 
-          case 31:
+          case 22:
             actions = _context.sent;
             arr.push(_objectSpread({}, team, {
               teamHome: _objectSpread({}, teamHome[0]),
@@ -100,54 +111,54 @@ function () {
               actions: actions
             }));
 
-          case 33:
+          case 24:
             _iteratorNormalCompletion = true;
-            _context.next = 14;
+            _context.next = 9;
             break;
 
-          case 36:
-            _context.next = 42;
+          case 27:
+            _context.next = 33;
             break;
 
-          case 38:
-            _context.prev = 38;
-            _context.t0 = _context["catch"](12);
+          case 29:
+            _context.prev = 29;
+            _context.t0 = _context["catch"](7);
             _didIteratorError = true;
             _iteratorError = _context.t0;
 
-          case 42:
-            _context.prev = 42;
-            _context.prev = 43;
+          case 33:
+            _context.prev = 33;
+            _context.prev = 34;
 
             if (!_iteratorNormalCompletion && _iterator["return"] != null) {
               _iterator["return"]();
             }
 
-          case 45:
-            _context.prev = 45;
+          case 36:
+            _context.prev = 36;
 
             if (!_didIteratorError) {
-              _context.next = 48;
+              _context.next = 39;
               break;
             }
 
             throw _iteratorError;
 
-          case 48:
-            return _context.finish(45);
+          case 39:
+            return _context.finish(36);
 
-          case 49:
-            return _context.finish(42);
+          case 40:
+            return _context.finish(33);
 
-          case 50:
+          case 41:
             res.send(arr);
 
-          case 51:
+          case 42:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[12, 38, 42, 50], [43,, 45, 49]]);
+    }, _callee, null, [[7, 29, 33, 41], [34,, 36, 40]]);
   }));
 
   return function getAllMatches(_x, _x2) {
@@ -158,62 +169,53 @@ function () {
 var getAllFinsihedMatches =
 /*#__PURE__*/
 function () {
-  var _ref8 = (0, _asyncToGenerator2["default"])(
+  var _ref2 = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee2(req, res) {
-    var _ref9, _ref10, rows, fields, err, a, arr, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, team, _ref11, _ref12, teamHome, _ref13, _ref14, teamHost, userMessages, actions;
+    var rows, arr, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, team, teamHome, teamHost, userMessages, actions;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             _context2.next = 2;
-            return _connectionDb2.promisePool.query("SELECT * FROM matches WHERE finished = 1 ORDER BY date");
+            return selectAllFromMatchesFinished();
 
           case 2:
-            _ref9 = _context2.sent;
-            _ref10 = (0, _slicedToArray2["default"])(_ref9, 4);
-            rows = _ref10[0];
-            fields = _ref10[1];
-            err = _ref10[2];
-            a = _ref10[3];
+            rows = _context2.sent;
             arr = new Array();
             _iteratorNormalCompletion2 = true;
             _didIteratorError2 = false;
             _iteratorError2 = undefined;
-            _context2.prev = 12;
+            _context2.prev = 7;
             _iterator2 = rows[Symbol.iterator]();
 
-          case 14:
+          case 9:
             if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-              _context2.next = 36;
+              _context2.next = 27;
               break;
             }
 
             team = _step2.value;
-            _context2.next = 18;
-            return _connectionDb2.promisePool.query("SELECT * FROM teams WHERE id =?", [team.teamHome]);
+            _context2.next = 13;
+            return _teams["default"].getTeamById(team.teamHome);
 
-          case 18:
-            _ref11 = _context2.sent;
-            _ref12 = (0, _slicedToArray2["default"])(_ref11, 1);
-            teamHome = _ref12[0];
-            _context2.next = 23;
-            return _connectionDb2.promisePool.query("SELECT * FROM teams WHERE id =?", [team.teamHost]);
+          case 13:
+            teamHome = _context2.sent;
+            _context2.next = 16;
+            return _teams["default"].getTeamById(team.teamHost);
 
-          case 23:
-            _ref13 = _context2.sent;
-            _ref14 = (0, _slicedToArray2["default"])(_ref13, 1);
-            teamHost = _ref14[0];
-            _context2.next = 28;
+          case 16:
+            teamHost = _context2.sent;
+            _context2.next = 19;
             return _comment["default"].getTeamsUsersComments(team.id);
 
-          case 28:
+          case 19:
             userMessages = _context2.sent;
-            _context2.next = 31;
+            _context2.next = 22;
             return _matchActions["default"].getActionsOfMatchById(team.id);
 
-          case 31:
+          case 22:
             actions = _context2.sent;
             arr.push(_objectSpread({}, team, {
               teamHome: _objectSpread({}, teamHome[0]),
@@ -222,65 +224,65 @@ function () {
               actions: actions
             }));
 
-          case 33:
+          case 24:
             _iteratorNormalCompletion2 = true;
-            _context2.next = 14;
+            _context2.next = 9;
             break;
 
-          case 36:
-            _context2.next = 42;
+          case 27:
+            _context2.next = 33;
             break;
 
-          case 38:
-            _context2.prev = 38;
-            _context2.t0 = _context2["catch"](12);
+          case 29:
+            _context2.prev = 29;
+            _context2.t0 = _context2["catch"](7);
             _didIteratorError2 = true;
             _iteratorError2 = _context2.t0;
 
-          case 42:
-            _context2.prev = 42;
-            _context2.prev = 43;
+          case 33:
+            _context2.prev = 33;
+            _context2.prev = 34;
 
             if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
               _iterator2["return"]();
             }
 
-          case 45:
-            _context2.prev = 45;
+          case 36:
+            _context2.prev = 36;
 
             if (!_didIteratorError2) {
-              _context2.next = 48;
+              _context2.next = 39;
               break;
             }
 
             throw _iteratorError2;
 
-          case 48:
-            return _context2.finish(45);
+          case 39:
+            return _context2.finish(36);
 
-          case 49:
-            return _context2.finish(42);
+          case 40:
+            return _context2.finish(33);
 
-          case 50:
+          case 41:
             res.send(arr);
 
-          case 51:
+          case 42:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[12, 38, 42, 50], [43,, 45, 49]]);
+    }, _callee2, null, [[7, 29, 33, 41], [34,, 36, 40]]);
   }));
 
   return function getAllFinsihedMatches(_x3, _x4) {
-    return _ref8.apply(this, arguments);
+    return _ref2.apply(this, arguments);
   };
 }();
 
 var getMatchId =
 /*#__PURE__*/
 function () {
-  var _ref15 = (0, _asyncToGenerator2["default"])(
+  var _ref3 = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee3(req, res) {
     var id, match, teamHome, teamHost, userMessages, actions;
@@ -330,14 +332,14 @@ function () {
   }));
 
   return function getMatchId(_x5, _x6) {
-    return _ref15.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 }();
 
 var getMatch =
 /*#__PURE__*/
 function () {
-  var _ref16 = (0, _asyncToGenerator2["default"])(
+  var _ref4 = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee4(id) {
     return _regenerator["default"].wrap(function _callee4$(_context4) {
@@ -359,7 +361,7 @@ function () {
   }));
 
   return function getMatch(_x7) {
-    return _ref16.apply(this, arguments);
+    return _ref4.apply(this, arguments);
   };
 }();
 
@@ -446,10 +448,10 @@ var editMatch = function editMatch(req, res) {
   });
 };
 
-var editMatchScore = function editMatchScore(_ref17) {
-  var scoreHome = _ref17.scoreHome,
-      scoreHost = _ref17.scoreHost,
-      id = _ref17.id;
+var editMatchScore = function editMatchScore(_ref5) {
+  var scoreHome = _ref5.scoreHome,
+      scoreHost = _ref5.scoreHost,
+      id = _ref5.id;
   return new Promise(function (res, rej) {
     _connectionDb["default"].connection.query("UPDATE `matches` SET scoreHome = ?, scoreHost = ? WHERE id= ?", [scoreHome, scoreHost, id], function (err, result, fields) {
       if (err) {

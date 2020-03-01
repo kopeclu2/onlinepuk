@@ -9,16 +9,20 @@ import openSocket from "socket.io-client";
 import ActionsCreate from "./EditingMatch/ActionsCreate";
 import ActionsMap from "./EditingMatch/ActionsMap";
 import { checkForValidUser } from "../../actions/checkForValidUser";
+
 const socket = openSocket.connect("http://localhost:4000");
 
 let EditingMatch = ({ match, matchValues,checkForValidUser }) => {
   const scoreGoal = () => {
+    console.log('EEHEHHE')
     socket.emit("goalScoreAdmin", {
       token: localStorage.getItem("token"),
       match: matchValues
     });
   };
   const matchLive = live => {
+    console.log('EEHEHHE')
+    
     socket.emit("matchGoLive", {
       token: localStorage.getItem("token"),
       match: matchValues,
@@ -26,6 +30,7 @@ let EditingMatch = ({ match, matchValues,checkForValidUser }) => {
     });
   };
   const matchFinished = finished => {
+    console.log('EEHEHHE')
     socket.emit("matchGoFinished", {
       token: localStorage.getItem("token"),
       match: matchValues,

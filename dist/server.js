@@ -38,6 +38,10 @@ var _ChatRoomComment = require("./models/ChatRoomComment");
 
 var _ramda = require("ramda");
 
+var _herokuLogger = _interopRequireDefault(require("heroku-logger"));
+
+var _matchWSService = require("./services/matchWSService");
+
 require("rootpath")();
 
 var express = require("express");
@@ -51,12 +55,13 @@ var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 
 var uri = "mongodb+srv://Lukasek:Monstercar494@onlinepuk-9lent.mongodb.net/test?retryWrites=true&w=majority";
-mongoose.connect(uri, {
+var mongoLab = "mongodb://Lukas:Monstercar494@ds155218.mlab.com:55218/heroku_kskj9hw8";
+mongoose.connect(mongoLab, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
 var dbMongo = mongoose.connection;
-dbMongo.once("opne", function () {
+dbMongo.once("open", function () {
   console.log("MONGO CONNECTED");
 });
 dbMongo.on("error", function (err) {
@@ -70,7 +75,7 @@ var io = (0, _socket["default"])(serverIO);
 try {
   _connectionDb["default"].connect();
 } catch (err) {
-  console.log(err);
+  console.log('ERRRRRR', err);
 }
 
 app.use(bodyParser.urlencoded({
@@ -80,8 +85,13 @@ app.use(bodyParser.json());
 app.use(cors()); // api routes
 
 app.use(express["static"](_path["default"].join(__dirname, "/../frontend/build")));
+/*app.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname + "/../frontend/build/index.html"));
+  console.log(path.dirname(require.main.filename));
+});*/
+
 app.get("/", function (req, res) {
-  res.sendFile(_path["default"].join(__dirname + "/../frontend/build/index.html"));
+  res.sendFile(_path["default"].join(__dirname + "/../frontend/public/index.html"));
   console.log(_path["default"].dirname(require.main.filename));
 });
 app.use("/users", _users["default"]);
@@ -93,78 +103,12 @@ app.use("/chatRoom", _chatRoomController["default"]); // global error handler
 
 app.use(_errorHandler["default"]);
 io.on("connection", function (socket) {
-  socket.on("goalScoreAdmin", function (_ref) {
-    var token = _ref.token,
-        match = _ref.match;
-
-    _jsonwebtoken["default"].verify(token, _config["default"].secret, function (err, decoded) {
-      if (!err) {
-        _User.User.findById(decoded.sub, function (err, user) {
-          console.log("SUER WS", user);
-
-          if (user.role === "Admin") {
-            _matches2["default"].editMatchScore(match).then(function () {
-              _matches2["default"].getMatch(match.id).then(function (match) {
-                var findedMatch = match[0];
-                socket.broadcast.emit("goal", {
-                  id: findedMatch.id,
-                  scoreHome: findedMatch.scoreHome,
-                  scoreHost: findedMatch.scoreHost
-                });
-              });
-            })["catch"](function (err) {
-              return console.log("PROMISE", err);
-            });
-          }
-        });
-      }
-    });
-  });
-  socket.on("matchGoLive", function (_ref2) {
-    var token = _ref2.token,
-        match = _ref2.match,
-        liveValue = _ref2.liveValue;
-    console.log(liveValue);
-
-    _jsonwebtoken["default"].verify(token, _config["default"].secret, function (err, decoded) {
-      if (!err) {
-        _User.User.findById(decoded.sub, function (err, user) {
-          if (user.role === "Admin") {
-            _matches2["default"].setLiveMatch(match, liveValue).then(function () {
-              return liveValue && socket.broadcast.emit("liveSucces", {
-                match: match
-              });
-            })["catch"](function () {});
-          }
-        });
-      } else {
-        console.log("ERROR WS", "color: red");
-      }
-    });
-  });
-  socket.on("matchGoFinished", function (_ref3) {
-    var token = _ref3.token,
-        match = _ref3.match,
-        finishedValue = _ref3.finishedValue;
-    console.log(finishedValue);
-
-    _jsonwebtoken["default"].verify(token, _config["default"].secret, function (err, decoded) {
-      if (!err) {
-        _User.User.findById(decoded.sub, function (err, user) {
-          if (user.role === "Admin") {
-            _matches2["default"].setMatchFinished(match, finishedValue).then(function () {
-              return finishedValue && socket.broadcast.emit("finishedSuccess", {
-                match: match
-              });
-            })["catch"](function () {});
-          }
-        });
-      }
-    });
-  });
+  (0, _matchWSService.matchWSService)(socket);
   (0, _chatRoomWSService.chatWebSocket)(socket);
 });
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 4000;
 serverIO.listen(port, function () {
+  _herokuLogger["default"].info("Starting server ON ".concat(port, " @@@@@@CONNNNECT\"\"\"\"\""));
+
   console.log("listen on port ".concat(port));
 });

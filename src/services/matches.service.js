@@ -3,25 +3,38 @@ import { isEmpty } from "ramda";
 import teamsService from "../services/teams.service";
 import commentService from "../services/comment.service";
 import actionsService from "./matchActions.service";
-import { promisePool } from "../_helpers/connectionDb2";
 
 const arrayToPush = new Array();
+
+const selectAllFromMatches = () => {
+  return new Promise((res,rej) => {
+    db.connection.query("SELECT * FROM matches ORDER BY date",[], (err, result) => {
+      if(!err) {
+        res(result)
+      } else {
+        rej()
+      }
+    })
+  })
+}
+
+const selectAllFromMatchesFinished = () => {
+  return new Promise((res,rej) => {
+    db.connection.query("SELECT * FROM matches WHERE finished = 1 ORDER BY date",[], (err, result) => {
+      if(!err) {
+        res(result)
+      } else {
+        rej()
+      }
+    })
+  })
+}
 const getAllMatches = async (req, res) => {
-  const [rows, fields, err, a] = await promisePool.query(
-    "SELECT * FROM matches ORDER BY date"
-  );
+  const rows = await selectAllFromMatches()
   let arr = new Array();
   for (let team of rows) {
-    const [
-      teamHome
-    ] = await promisePool.query("SELECT * FROM teams WHERE id =?", [
-      team.teamHome
-    ]);
-    const [
-      teamHost
-    ] = await promisePool.query("SELECT * FROM teams WHERE id =?", [
-      team.teamHost
-    ]);
+    const teamHome = await teamsService.getTeamById(team.teamHome);
+    const teamHost = await teamsService.getTeamById(team.teamHost)
     const userMessages = await commentService.getTeamsUsersComments(team.id);
     const actions = await actionsService.getActionsOfMatchById(team.id);
     arr.push({
@@ -35,21 +48,11 @@ const getAllMatches = async (req, res) => {
   res.send(arr);
 };
 const getAllFinsihedMatches = async (req,res) => {
-  const [rows, fields, err, a] = await promisePool.query(
-    "SELECT * FROM matches WHERE finished = 1 ORDER BY date"
-  );
+  const rows = await selectAllFromMatchesFinished()
   let arr = new Array();
   for (let team of rows) {
-    const [
-      teamHome
-    ] = await promisePool.query("SELECT * FROM teams WHERE id =?", [
-      team.teamHome
-    ]);
-    const [
-      teamHost
-    ] = await promisePool.query("SELECT * FROM teams WHERE id =?", [
-      team.teamHost
-    ]);
+    const teamHome = await teamsService.getTeamById(team.teamHome);
+    const teamHost = await teamsService.getTeamById(team.teamHost)
     const userMessages = await commentService.getTeamsUsersComments(team.id);
     const actions = await actionsService.getActionsOfMatchById(team.id);
     arr.push({
