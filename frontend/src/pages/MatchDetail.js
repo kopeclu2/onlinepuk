@@ -4,6 +4,7 @@ import { getMatchById, loadMatches } from "../actions/matches";
 import moment from "moment";
 import HockeyRing from "../utils/hockey-pitch.png";
 import { useTheme } from "@material-ui/core/styles";
+import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 import {
   Container,
   Grid,
@@ -13,7 +14,6 @@ import {
   makeStyles,
   CircularProgress,
   Paper,
-  withWidth,
   useMediaQuery
 } from "@material-ui/core";
 import { isNil, isEmpty } from "ramda";
@@ -28,11 +28,25 @@ const useStyles = makeStyles(theme => ({
   },
   teamsText: {
     color: theme.palette.text.secondary,
-    textAlign: "center"
+    textAlign: "center",
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1rem'
+    }
   },
   large: {
     width: theme.spacing(10),
-    height: theme.spacing(10)
+    height: theme.spacing(10),
+    [theme.breakpoints.down('sm')] : {
+      width: theme.spacing(6),
+    height: theme.spacing(6)
+    }
+  },
+  dateText: {
+    color: theme.palette.text.secondary,
+    textAlign: "center",
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.7rem'
+    }
   },
   blinkingText: {
     animationName: "$blinker",
@@ -97,15 +111,15 @@ const MatchDetail = ({ match, matchDetail, matches, width }) => {
               justify="center"
               alignItems="center"
             >
-              <Typography variant={"h2"}>
+              <Typography variant={isWidthUp('sm',width) ? "h2" :"h4"}>
                 {matchDetail.live === 0 && matchDetail.finished === 0 ? (
                   <div style={{ marginRight: "15px" }}>{xs ? "-" : "—"}</div>
                 ) : (
                   matchDetail.scoreHome
                 )}
               </Typography>
-              <Typography variant={"h2"}>:</Typography>
-              <Typography variant={"h2"}>
+              <Typography variant={isWidthUp('sm',width) ? "h2" :"h4"}>:</Typography>
+              <Typography variant={isWidthUp('sm',width) ? "h2" :"h4"}>
                 {matchDetail.live === 0 && matchDetail.finished === 0 ? (
                   <div style={{ marginLeft: "15px" }}>{xs ? "-" : "—"}</div>
                 ) : (
@@ -151,7 +165,7 @@ const MatchDetail = ({ match, matchDetail, matches, width }) => {
           </Typography>
         </Grid>
         <Grid item xs={4} style={classes}>
-          <Typography variant={"body1"} className={materialClasses.teamsText}>
+          <Typography variant={"body1"} className={materialClasses.dateText}>
             {moment(matchDetail.date).format("llll")}
           </Typography>
         </Grid>

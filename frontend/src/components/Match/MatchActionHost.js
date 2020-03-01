@@ -3,9 +3,11 @@ import { Paper, Grid, Typography } from "@material-ui/core";
 import matchActions,{goalActions,otherSymbols,periodActions} from "../../utils/matchActions";
 import faulTypes from "../../utils/faulTypes";
 import { goalTypes } from "../../utils/goalTypes";
+import withWidth, { isWidthDown } from '@material-ui/core/withWidth';
 const MatchActionHost = ({
-  action: { time, seconds, content, type, faulType, generalType }
+  action: { time, seconds, content, type, faulType, generalType }, width
 }) => {
+  const mobile = isWidthDown('sm', width);
   const classes = {
     alignItems: "center"
   };
@@ -13,7 +15,9 @@ const MatchActionHost = ({
     <Paper
       style={{
         width: "100%",
-        height: "40px",
+        height: "fit-content",
+        paddingTop: mobile ? "4px" : "8px",
+        paddingBottom: mobile ? "4px" : "8px",
         display: "flex",
         alignItems: "center"
       }}>
@@ -26,12 +30,12 @@ const MatchActionHost = ({
           style={{ textAlign: "right" }}
           justify="flex-end"
         >
-          {faulType !== 0 && <p style={{fontSize: '0.8rem', margin:'0',color: 'darkgray',paddingRight:'20px'}}>{'('}
+          {faulType !== 0 && <p style={{fontSize: mobile ? '0.7rem' : '0.8rem', margin:'0',color: 'darkgray',paddingRight:'20px'}}>{'('}
             {generalType ===1  && faulTypes[faulType]}
             {generalType ===0  && goalTypes[faulType].desc}
             {')'}
           </p> }    
-          <Typography variant={"body1"}>{content}</Typography>
+          <Typography variant={"body1"} style={mobile && {fontSize: '0.8rem'}}>{content}</Typography>
         </Grid>
         <Grid
           container
@@ -40,6 +44,7 @@ const MatchActionHost = ({
           alignItems="center"
           xs={1}
           md={1}
+          style={mobile && {transform: 'scale(0.8)'}}
         >
           {generalType ===0  && goalActions[type].desc}
             {generalType ===1  && matchActions[type].desc}
@@ -55,13 +60,13 @@ const MatchActionHost = ({
           xs={2}
           md={1}
         >
-          <Typography variant={"body1"}>{time}</Typography>
-          <Typography variant={"body1"}>:</Typography>
-          <Typography variant={"body1"}>{seconds}</Typography>
+          <Typography variant={"body1"} style={mobile && {fontSize: '0.8rem'}}>{time}</Typography>
+          <Typography variant={"body1"} style={mobile && {fontSize: '0.8rem'}}>:</Typography>
+          <Typography variant={"body1"} style={mobile && {fontSize: '0.8rem'}}>{seconds}</Typography>
         </Grid>
       </Grid>
     </Paper>
   );
 };
 
-export default MatchActionHost;
+export default withWidth()(MatchActionHost);

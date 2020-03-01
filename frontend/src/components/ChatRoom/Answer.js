@@ -18,7 +18,7 @@ const Answer = ({createSubComment, parrentID, setAnswer, createSubCommentWS}) =>
   console.log(parrentID)
   return (
     <Paper style={{ float: "right", width: "90%", marginBottom: "2px" }}>
-      <ListItem alignItems="flex-start" className={classes.root}>
+      <ListItem alignItems="flex-start" className={classes.root} style={{padding: '5px 0px 5px 10px'}}>
         <Grid container justify={"center"} alignItems={"center"}>
           <Grid item md={10}>
             <TextField
@@ -26,6 +26,7 @@ const Answer = ({createSubComment, parrentID, setAnswer, createSubCommentWS}) =>
               onChange={e => settext(e.target.value)}
               label={"Váš komentář"}
               variant={"outlined"}
+              size={'small'}
               fullWidth
             />
           </Grid>
@@ -38,7 +39,7 @@ const Answer = ({createSubComment, parrentID, setAnswer, createSubCommentWS}) =>
               variant="outlined"
               size="large"
               color="primary"
-              style={{ padding: "14.5px 14px" }}
+              style={{ padding: "6px 14px" }}
               onClick={e => { createSubCommentWS(parrentID, text); setAnswer(false)}}
             >
               Odeslat

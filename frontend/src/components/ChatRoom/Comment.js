@@ -23,7 +23,12 @@ import EditSection from "./EditSection";
 import Answer from "./Answer";
 import openSocket from "socket.io-client";
 import { isNil } from "ramda";
-const socket = openSocket.connect(process.env.NODE_ENV === 'production' ? 'https://onlinepuk.herokuapp.com/' : '/');
+import withWidth, { isWidthDown } from "@material-ui/core/withWidth";
+const socket = openSocket.connect(
+  process.env.NODE_ENV === "production"
+    ? "https://onlinepuk.herokuapp.com/"
+    : "/"
+);
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,12 +45,19 @@ const Comment = ({
   user,
   deleteComment,
   edit,
-  response
+  setAnswerSubState,
+  setAnswerSub,
+  response,
+  width,
+  setfromAnswerChange
 }) => {
   const [Value, setValue] = useState("");
   const [Edit, setEdit] = useState(false);
   const [answer, setAnswer] = useState(false);
-
+  const [isAnswerSubOpen, setisAnswerSubOpen] = useState(false);
+  const [fromAnswer, setfromAnswer] = useState(false);
+  const [numberOfSubcomments, setnumberOfSubcomments] = useState(2);
+  const mobile = isWidthDown("xs", width);
   const classes = useStyles();
   const deleteCommentWS = () => {
     socket.emit("deleteComment", {
@@ -54,7 +66,9 @@ const Comment = ({
       user: user.sub
     });
   };
-  const createSubCommentWS = (parrentID,content) => {
+  console.log(comment.subComments.length, numberOfSubcomments);
+
+  const createSubCommentWS = (parrentID, content) => {
     socket.emit("createSubComment", {
       token: localStorage.getItem("token"),
       parrentID: comment._id,
@@ -62,21 +76,25 @@ const Comment = ({
       content: content
     });
   };
-  const updateSubCommentWS = (content,_id) => {
+  const updateSubCommentWS = (content, _id) => {
     socket.emit("updateSubComment", {
       token: localStorage.getItem("token"),
       _id: _id,
       content: content
     });
   };
-  console.log('COMMENT',comment);
-  if( isNil(comment.postedBy)) {
-      return '';
-  } 
-    const commentOwner = user.sub === comment.postedBy._id;
-  
-  
-  
+  if (isNil(comment.postedBy)) {
+    return "";
+  }
+  const commentOwner = user.sub === comment.postedBy._id;
+  const fromAnswerChange = value => {
+    if (value) {
+      setfromAnswer(true);
+      setAnswer(value);
+    } else {
+      setAnswer(value);
+    }
+  };
   return (
     <div style={{ marginBottom: "2px", marginTop: "2px", clear: "both" }}>
       <Paper
@@ -89,17 +107,26 @@ const Comment = ({
           }
         }
       >
-        <ListItem alignItems="flex-start" className={classes.root}>
-          <Grid container justify={"center"} alignItems={"center"}>
+        <ListItem
+          alignItems="flex-start"
+          className={classes.root}
+          style={{ padding: "1px 0px 1px 5px" }}
+        >
+          <Grid container justify={"flex-start"} alignItems={"center"}>
             <Grid
               container
               direction="row"
               justify="center"
               alignItems="center"
               md={1}
+              xs={2}
             >
               <ListItemAvatar style={{ padding: "0", margin: "0" }}>
-                <Avatar alt="Remy Sharp" src="https://picsum.photos/200" />
+                <Avatar
+                  alt="Remy Sharp"
+                  src="https://picsum.photos/200"
+                  style={mobile ? { height: "30px", width: "30px" } : {}}
+                />
               </ListItemAvatar>
             </Grid>
             <Grid item md={commentOwner ? 9 : 11}>
@@ -113,13 +140,17 @@ const Comment = ({
                 />
               ) : (
                 <ListItemText
+                  style={{ margin: "0px 0px 0px -15px" }}
                   primary={
                     <React.Fragment>
                       <Typography
                         component="span"
                         variant="h6"
                         className={classes.inline}
-                        style={{ color: "rgb(18, 101, 189)" }}
+                        style={{
+                          color: "rgb(18, 101, 189)",
+                          fontSize: mobile ? "0.7rem" : "0.9rem"
+                        }}
                       >
                         {comment.postedBy.username}
                       </Typography>
@@ -128,7 +159,10 @@ const Comment = ({
                         variant="body2"
                         className={classes.inline}
                         color="textPrimary"
-                        style={{ marginLeft: "25px" }}
+                        style={{
+                          marginLeft: "8px",
+                          fontSize: mobile ? "0.6rem" : "0.7rem"
+                        }}
                       >
                         {moment(comment.date)
                           .startOf("minute")
@@ -143,6 +177,7 @@ const Comment = ({
                         variant="body2"
                         className={classes.inline}
                         color="textPrimary"
+                        style={{ fontSize: mobile ? "0.7rem" : "0.8rem" }}
                       >
                         {comment.content}
                       </Typography>
@@ -181,28 +216,32 @@ const Comment = ({
             )}
             {user.isAuthenticated && (
               <Grid item md={12}>
-                {!subComment && (
+                {
                   <Link
                     component="button"
                     variant="body2"
+                    style={{ fontSize: mobile ? "0.7rem" : "0.8rem" }}
                     onClick={() => {
-                      setAnswer(true);
+                      if (subComment) {
+                        setAnswerSub(!setAnswerSubState);
+                        setisAnswerSubOpen(!isAnswerSubOpen);
+                      } else {
+                        setAnswer(!answer);
+                        setfromAnswer(false);
+                      }
                     }}
                   >
-                    Odpovědět
+                    {subComment
+                      ? isAnswerSubOpen
+                        ? "Zavřít"
+                        : "Odpovědět"
+                      : fromAnswer
+                      ? "Odpovědět"
+                      : answer
+                      ? "Zavřít"
+                      : "Odpovědět"}
                   </Link>
-                )}
-
-                <Link
-                  style={{ marginLeft: "25px" }}
-                  component="button"
-                  variant="body2"
-                  onClick={() => {
-                    console.info("I'm a button.");
-                  }}
-                >
-                  Like
-                </Link>
+                }
               </Grid>
             )}
           </Grid>
@@ -218,9 +257,10 @@ const Comment = ({
           />
         </div>
       )}
+      <div>
       {!comment.isSubComment &&
-        comment.subComments.map(subComment => {
-          return (
+        comment.subComments.map((subComment, index) => {
+          return index < numberOfSubcomments ? ( 
             <div style={{ marginBottom: "2px", clear: "both" }}>
               {" "}
               <Comment
@@ -231,13 +271,80 @@ const Comment = ({
                 comment={subComment}
                 deleteComment={deleteComment}
                 user={user}
+                setAnswerSubState={answer}
+                setAnswerSub={fromAnswerChange}
+                setfromAnswerChange={setfromAnswer}
               />{" "}
+             
             </div>
+          ) : (
+            index === numberOfSubcomments ? (
+              <div
+                style={{ marginBottom: "2px", marginTop: "2px", clear: "both" }}
+              >
+                <Paper
+                  style={
+                    subComment && {
+                      float: "right",
+                      width: "90%",
+                      marginTop: "2px",
+                      marginBottom: "2px",
+                      textAlign: "center",
+                      backgroundColor: "transparent",
+                      boxShadow: "none"
+                    }
+                  }
+                >
+                  <Link
+                    component="button"
+                    variant="body2"
+                    style={{ fontSize: mobile ? "0.7rem" : "0.8rem" }}
+                    onClick={() => setnumberOfSubcomments(numberOfSubcomments + 2)}
+                  >
+                    Nacist dalsi
+                  </Link>
+                </Paper>
+              </div>
+            ) : ('')
           );
-        })}
+        })
+        
+      }
+     
+      </div>
+      
     </div>
   );
 };
 
-export default Comment;
+export default withWidth()(Comment);
 /*<Comment subComment />*/
+/*
+{
+        comment.subComments.length <= numberOfSubcomments && <div
+        style={{ marginBottom: "2px", marginTop: "2px", clear: "both" }}
+      >
+        <Paper
+          style={
+            subComment && {
+              float: "right",
+              width: "90%",
+              marginTop: "2px",
+              marginBottom: "2px",
+              textAlign: "center",
+              backgroundColor: "transparent",
+              boxShadow: "none"
+            }
+          }
+        >
+          <Link
+            component="button"
+            variant="body2"
+            style={{ fontSize: mobile ? "0.7rem" : "0.8rem" }}
+            onClick={() => setnumberOfSubcomments(numberOfSubcomments + 2)}
+          >
+            Skryt
+          </Link>
+        </Paper>
+      </div>
+      }*/

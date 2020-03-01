@@ -1,4 +1,5 @@
 import React from "react";
+import withWidth ,{ isWidthUp } from '@material-ui/core/withWidth';
 import {
   Card,
   makeStyles,
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Match = ({ match }) => {
+const Match = ({ match,width }) => {
   const classes = {
     display: "flex",
     justifyContent: "center"
@@ -66,9 +67,9 @@ const Match = ({ match }) => {
               justify="center"
               alignItems="center"
             >
-              <Typography variant={"h2"}>{match.live === 0 && match.finished === 0 ? <div style={{marginRight: "15px"}}>{xs  ?'-'  : '—' }</div> :match.scoreHome}</Typography>
-              <Typography variant={"h2"}>:</Typography>
-              <Typography variant={"h2"}>{match.live === 0 && match.finished === 0 ? <div style={{marginLeft: "15px"}}>{xs  ? '-'  : '—' }</div> :match.scoreHost}</Typography>
+              <Typography variant={isWidthUp('sm',width) ? "h2" :"h4"}>{match.live === 0 && match.finished === 0 ? <div style={{marginRight: "15px"}}>{xs  ?'-'  : '—' }</div> :match.scoreHome}</Typography>
+              <Typography variant={isWidthUp('sm',width) ? "h2" :"h4"}>:</Typography>
+              <Typography variant={isWidthUp('sm',width) ? "h2" :"h4"}>{match.live === 0 && match.finished === 0 ? <div style={{marginLeft: "15px"}}>{xs  ? '-'  : '—' }</div> :match.scoreHost}</Typography>
             </Grid>
             {match.live === 1 && (
               <Grid item>
@@ -117,7 +118,7 @@ const Match = ({ match }) => {
   );
 };
 
-export default Match;
+export default withWidth()(Match);
 /*<Grid container spacing={3} style={classes}>
         <Grid item xs>
         </Grid>
