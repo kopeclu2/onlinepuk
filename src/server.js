@@ -21,7 +21,7 @@ import { User } from "./models/User";
 import {chatWebSocket, getAllComments, verifyTokenUSer } from "./services/chatRoomWSService";
 import { ChatRoomComment } from "./models/ChatRoomComment";
 import { isNil } from "ramda";
-
+import logger from 'heroku-logger'
 const mongoose = require("mongoose");
 
 const uri =
@@ -41,11 +41,13 @@ dbMongo.on("error", err => {
 });
 var serverIO = http.createServer(app);
 const io = socketio(serverIO);
+/*
 try {
   db.connect();
 } catch (err) {
   console.log(err);
 }
+*/
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -135,5 +137,6 @@ io.on("connection", function(socket) {
 });
 var port = process.env.PORT || 8080;
 serverIO.listen(port, () => {
+  logger.info(`Starting server ON ${port} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`)
   console.log(`listen on port ${port}`);
 });
