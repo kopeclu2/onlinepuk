@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Ned 02. úno 2020, 21:55
+-- Vytvořeno: Ned 01. bře 2020, 20:08
 -- Verze serveru: 10.4.11-MariaDB
 -- Verze PHP: 7.4.1
 
@@ -45,12 +45,15 @@ CREATE TABLE `matchactions` (
 --
 
 INSERT INTO `matchactions` (`matchactions_id`, `content`, `type`, `teamHomeOrHost`, `match_id`, `time`, `seconds`, `faulType`, `generalType`) VALUES
-(45, 'asdasdsd', 1, 1, 102, '20', '20', 7, 0),
-(47, '28 Kopecký Lukáš', 3, 1, 102, '21', '40', 3, 0),
-(48, '48 Marek Laušman', 0, 1, 102, '35', '50', 0, 0),
-(49, '28 Prokop Pavel', 0, 2, 102, '38', '40', 0, 0),
-(50, 'Otakar Pavel - Zlatan Polívka', 10, 1, 102, '39', '40', 0, 0),
-(51, 'Zranění hráče 40 Polívka Adam', 9, 2, 102, '41', '40', 0, 0);
+(64, '', 0, 3, 106, '', '', 0, 2),
+(65, 'Lukas Kopecky', 0, 1, 106, '20', '20', 3, 0),
+(66, 'Zraneni brankar', 2, 1, 106, '21', '20', 0, 3),
+(67, '', 1, 3, 106, '', '', 0, 2),
+(68, '', 2, 3, 106, '', '', 0, 2),
+(69, '', 3, 3, 106, '', '', 0, 2),
+(70, 'Lukas Koepckz', 0, 1, 106, '62', '20', 2, 0),
+(71, '', 5, 3, 106, '', '', 0, 2),
+(72, 'asd', 0, 2, 106, '20', '20', 2, 0);
 
 -- --------------------------------------------------------
 
@@ -77,10 +80,10 @@ CREATE TABLE `matches` (
 --
 
 INSERT INTO `matches` (`id`, `name`, `teamHome`, `teamHost`, `scoreHome`, `scoreHost`, `date`, `matchState`, `stadion`, `finished`, `live`) VALUES
-(102, NULL, 1, 2, 1, 9, '2020-02-15T21:00:00.000Z', 0, 'Rychnov nad Kněžnou', 1, 0),
-(103, NULL, 1, 3, 0, 0, '2020-01-29T20:48:20.987Z', 0, 'DEFAULT VALUE', 1, 0),
-(104, NULL, 1, 4, 3, 0, '2020-01-30T13:19:46.314Z', 0, 'DEFAULT VALUE', 1, 0),
-(105, NULL, 5, 1, 1, 1, '2020-01-30T13:19:52.554Z', 0, 'DEFAULT VALUE', 1, 0);
+(106, NULL, 1, 7, 1, 17, '2020-02-28T21:05:48.766Z', 0, 'DEFAULT VALUE', 0, 1),
+(107, NULL, 4, 1, 0, 0, '2020-02-29T17:00:00.614Z', 0, 'DEFAULT VALUE', 0, 0),
+(108, NULL, 1, 4, 0, 0, '2020-03-01T19:01:06.687Z', 0, 'DEFAULT VALUE', 0, 0),
+(109, NULL, 1, 4, 0, 0, '2020-03-01T19:06:01.826Z', 0, 'DEFAULT VALUE', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -210,13 +213,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pro tabulku `matchactions`
 --
 ALTER TABLE `matchactions`
-  MODIFY `matchactions_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `matchactions_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT pro tabulku `matches`
 --
 ALTER TABLE `matches`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT pro tabulku `matchuserscomments`
