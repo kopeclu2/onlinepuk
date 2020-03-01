@@ -19,10 +19,11 @@ var addAction = function addAction(_ref) {
       time = body.time,
       seconds = body.seconds,
       match_id = body.match_id,
+      generalType = body.generalType,
       faulTypes = body.faulTypes;
   console.log(body);
   return new Promise(function (res, rej) {
-    _connectionDb["default"].connection.query('INSERT INTO matchactions(content,type,teamHomeOrHost,time,seconds,faulType,match_id) VALUES(?,?,?,?,?,?,?)', [content, type, teamHomeOrHost, time, seconds, faulTypes, match_id], function (err, result) {
+    _connectionDb["default"].connection.query('INSERT INTO matchactions(content,type,teamHomeOrHost,time,seconds,faulType,match_id,generalType) VALUES(?,?,?,?,?,?,?,?)', [content, type, teamHomeOrHost, time, seconds, faulTypes, match_id, generalType], function (err, result) {
       console.log(err);
 
       if (err) {
@@ -44,9 +45,10 @@ var editAction = function editAction(_ref2) {
       time = body.time,
       seconds = body.seconds,
       matchactions_id = body.matchactions_id,
-      faulTypes = body.faulTypes;
+      faulTypes = body.faulTypes,
+      generalType = body.generalType;
   return new Promise(function (res, rej) {
-    _connectionDb["default"].connection.query('UPDATE matchactions SET content =? ,' + 'type = ?, teamHomeOrHost =?, time= ?, seconds = ?, faulType = ? WHERE matchactions_id = ?', [content, type, teamHomeOrHost, time, seconds, faulTypes, matchactions_id], function (err, result) {
+    _connectionDb["default"].connection.query('UPDATE matchactions SET content =? ,' + 'type = ?, teamHomeOrHost =?, time= ?, seconds = ?, faulType = ?, generalType = ? WHERE matchactions_id = ?', [content, type, teamHomeOrHost, time, seconds, faulTypes, generalType, matchactions_id], function (err, result) {
       console.log(err);
 
       if (err) {

@@ -387,9 +387,10 @@ var createMatch = function createMatch(req, res) {
 var setLiveMatch = function setLiveMatch(match, liveValue) {
   return new Promise(function (res, rej) {
     var value = liveValue ? 1 : 0;
+    var neg = liveValue ? 0 : 1;
     console.log(value, match.id);
 
-    _connectionDb["default"].connection.query('UPDATE matches SET live = ? WHERE id = ?', [value, match.id], function (err, result) {
+    _connectionDb["default"].connection.query('UPDATE matches SET live = ?, finished = ? WHERE id = ?', [value, neg, match.id], function (err, result) {
       if (err) {
         console.log(err);
         rej();
@@ -404,7 +405,7 @@ var setMatchFinished = function setMatchFinished(match, finshedvalue) {
   return new Promise(function (res, rej) {
     var value = finshedvalue ? 1 : 0;
 
-    _connectionDb["default"].connection.query('UPDATE matches SET finished = ? WHERE id = ?', [value, match.id], function (err, result) {
+    _connectionDb["default"].connection.query('UPDATE matches SET finished = ?, live = ? WHERE id = ?', [value, 0, match.id], function (err, result) {
       if (err) {
         console.log(err);
         rej();
@@ -438,6 +439,7 @@ var editMatch = function editMatch(req, res) {
   var finishedValue = finished ? 1 : 0;
 
   _connectionDb["default"].connection.query("UPDATE `matches` SET name = ?, scoreHome = ?, scoreHost = ?, date = ?, matchState = ?, stadion = ?, live = ?, finished = ?   WHERE id= ? ", [name, scoreHome, scoreHost, date, matchState, stadion, liveValue, finishedValue, id], function (err, result, fields) {
+    console.log(err);
     res.status(200).json({
       message: "Zapas byl uspesne editovan"
     });

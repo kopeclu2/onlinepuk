@@ -33,7 +33,7 @@ function () {
           case 0:
             return _context.abrupt("return", new Promise(function (res, rej) {
               return _connectionDb["default"].connection.query("SELECT * FROM teams WHERE id = ? ", [id], function (err, result, fields) {
-                res(result);
+                if (!err) res(result);else rej(new Error('Nezdařilo se najít zápas'));
               });
             }));
 

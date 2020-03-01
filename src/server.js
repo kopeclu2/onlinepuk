@@ -133,7 +133,7 @@ io.on("connection", function(socket) {
   });
   chatWebSocket(socket);
 });
-
-serverIO.listen(process.env.PORT || 4000, () => {
-  console.log("listen");
+var port = process.env.PORT || 8080;
+serverIO.listen(port, () => {
+  console.log(`listen on port ${port}`);
 });

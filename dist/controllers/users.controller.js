@@ -20,10 +20,12 @@ var router = _express["default"].Router();
 // routes
 router.post('/authenticate', authenticate); // public route
 
-router.get('/', (0, _authorize["default"])(_role["default"].Admin), getAll); // admin only
+router.get('/all', (0, _authorize["default"])(_role["default"].Admin), getAll); // admin only
 
 router.get('/:id', (0, _authorize["default"])(), getById);
 router.post('/signup', signup);
+router.post('/deleteUser', (0, _authorize["default"])(_role["default"].Admin), deleteUser);
+router.post('/setUserRole', (0, _authorize["default"])(_role["default"].Admin), setUserRole);
 router.post('/check', checkToken);
 router.post('/get/user/from/token', getUserFromToken); // all authenticated users
 
@@ -34,13 +36,22 @@ function getUserFromToken(req, res) {
   _user["default"].getUserFromToken(req, res);
 }
 
+function setUserRole(req, res) {
+  _user["default"].setUserRole(req, res);
+}
+
+function deleteUser(req, res) {
+  _user["default"].deleteUser(req, res);
+}
+
 function checkToken(req, res, next) {
   _user["default"].checkValidToken(req, res);
 }
 
 function signup(req, res, next) {
-  _user["default"].signUp(req.body).then(function (result) {
-    return authenticate(req, res, next);
+  _user["default"].signUp(req.body).then(function (_ref) {
+    var message = _ref.message;
+    authenticate(req, res, next);
   })["catch"](function (err) {
     return res.status(400).json(err);
   });
@@ -56,12 +67,8 @@ function authenticate(req, res, next) {
   });
 }
 
-function getAll(req, res, next) {
-  _user["default"].getAll().then(function (users) {
-    return res.json(users);
-  })["catch"](function (err) {
-    return next(err);
-  });
+function getAll(req, res) {
+  _user["default"].getAll(req, res);
 }
 
 function getById(req, res, next) {

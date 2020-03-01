@@ -9,11 +9,9 @@ exports["default"] = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _config = _interopRequireDefault(require("../config.json"));
 
@@ -23,11 +21,14 @@ var _role = _interopRequireDefault(require("../_helpers/role"));
 
 var _connectionDb = _interopRequireDefault(require("../_helpers/connectionDb"));
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+var _User = require("../models/User.js");
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+var _bcrypt = _interopRequireDefault(require("bcrypt"));
+
+var _ramda = require("ramda");
 
 // users hardcoded for simplicity, store in a db for production applications
+var saltRound = 15;
 var users = [{
   id: 1,
   username: "admin",
@@ -49,13 +50,13 @@ var _default = {
   getById: getById,
   signUp: signUp,
   checkValidToken: checkValidToken,
-  getUserFromToken: getUserFromToken
+  getUserFromToken: getUserFromToken,
+  deleteUser: deleteUser,
+  setUserRole: setUserRole
 };
 exports["default"] = _default;
 
 function checkValidToken(req, res) {
-  console.log(req.body);
-
   _jsonwebtoken["default"].verify(req.body.token, _config["default"].secret, function (err, decoded) {
     if (err) {
       res.status(401).send({
@@ -70,7 +71,6 @@ function checkValidToken(req, res) {
 }
 
 function getUserFromToken(req, res) {
-  console.log(req.body);
   var token = req.body.token;
 
   if (!token) {
@@ -83,32 +83,57 @@ function getUserFromToken(req, res) {
     if (err) {
       throw err;
     } else {
-      console.log(user);
-
-      _connectionDb["default"].connection.query("SELECT * FROM users WHERE id = ?", [user.id || user.sub], function (err, result) {
-        if (err) {
-          console.log('ERROR', err);
-        } else {
-          console.log(result[0]);
-          var _result$ = result[0],
-              password = _result$.password,
-              id = _result$.id,
-              userWithoutPassword = (0, _objectWithoutProperties2["default"])(_result$, ["password", "id"]);
-
-          var newToken = _jsonwebtoken["default"].sign(_objectSpread({
-            sub: id
-          }, userWithoutPassword), _config["default"].secret, {
-            expiresIn: "30m"
+      _User.User.findOne({
+        _id: user.sub
+      }, function (err, user) {
+        if (user !== null && err === null) {
+          var _token = _jsonwebtoken["default"].sign({
+            sub: user._id,
+            role: user.role
+          }, _config["default"].secret, {
+            expiresIn: "1h"
           });
 
           res.send({
-            user: _objectSpread({
-              sub: id,
-              token: newToken
-            }, userWithoutPassword),
-            token: newToken
+            username: user.username,
+            sub: user._id,
+            email: user.email,
+            role: user.role,
+            token: _token
+          });
+        } else {
+          res.status(401).send({
+            message: "Spatny autorizacni token"
           });
         }
+      });
+    }
+  });
+}
+
+function setUserRole(req, res) {
+  _User.User.findByIdAndUpdate(req.body._id, {
+    role: req.body.role
+  }, function (err, user) {
+    if (!err) {
+      getAll(req, res);
+    } else {
+      res.status(400).send({
+        message: 'Nepodarilo se aktualizovat uzivatele'
+      });
+    }
+  });
+}
+
+function deleteUser(req, res) {
+  _User.User.findOneAndDelete({
+    _id: req.body._id
+  }, function (err, user) {
+    if (!err) {
+      getAll(req, res);
+    } else {
+      res.status(400).send({
+        message: 'Nepodarilo se vymazat uzivatele'
       });
     }
   });
@@ -119,20 +144,44 @@ function signUp(_ref) {
       password = _ref.password,
       email = _ref.email;
   return new Promise(function (res, rej) {
-    _connectionDb["default"].connection.query("SELECT * FROM users WHERE username= ? ", [username], function (err, result) {
-      if (result.length > 0) {
+    _User.User.findOne({
+      username: username
+    }, function (err, result) {
+      if (result !== null) {
         rej({
           message: "Uzivatelske jmeno ".concat(username, " je jiz zabrane")
         });
+        return;
       } else {
-        _connectionDb["default"].connection.query("INSERT INTO users (username,email,password) VALUES(?,?,?)", [username, email, password], function (err, result, fields) {
-          if (err) {
+        _User.User.findOne({
+          email: email
+        }, function (err, result) {
+          if (result !== null) {
             rej({
-              message: "Registrace selhala"
+              message: "Email ".concat(email, " je jiz zabrany")
             });
+            return;
           } else {
-            res({
-              message: "Uspensna registrace uzivatele ".concat(username)
+            var salt = _bcrypt["default"].genSaltSync(saltRound);
+
+            var hash = _bcrypt["default"].hashSync(password, salt);
+
+            var user = new _User.User({
+              username: username,
+              password: hash,
+              email: email,
+              role: _role["default"].User
+            });
+            user.save(function (err, user) {
+              if (err) {
+                rej({
+                  message: "Registrace selhala"
+                });
+              } else {
+                res({
+                  message: "Uspensna registrace uzivatele ".concat(username)
+                });
+              }
             });
           }
         });
@@ -156,23 +205,36 @@ function _authenticate() {
           case 0:
             username = _ref2.username, password = _ref2.password;
             return _context.abrupt("return", new Promise(function (res, rej) {
-              return _connectionDb["default"].connection.query("SELECT * from users WHERE username = ? AND password = ?", [username, password], function (err, user) {
-                if (user.length > 0) {
-                  var token = _jsonwebtoken["default"].sign({
-                    sub: user[0].id,
-                    role: user[0].role
-                  }, _config["default"].secret, {
-                    expiresIn: "30m"
-                  });
+              return _User.User.findOne({
+                username: username
+              }, function (err, user) {
+                if (user !== null) {
+                  if (_bcrypt["default"].compareSync(password, user.password)) {
+                    var token = _jsonwebtoken["default"].sign({
+                      sub: user._id,
+                      role: user.role
+                    }, _config["default"].secret, {
+                      expiresIn: "1h"
+                    });
 
-                  var _user$ = user[0],
-                      _password = _user$.password,
-                      userWithoutPassword = (0, _objectWithoutProperties2["default"])(_user$, ["password"]);
-                  res(_objectSpread({}, userWithoutPassword, {
-                    token: token
-                  }));
+                    var _password = user.password,
+                        userWithoutPassword = (0, _objectWithoutProperties2["default"])(user, ["password"]);
+                    res({
+                      username: user.username,
+                      sub: user._id,
+                      email: user.email,
+                      role: user.role,
+                      token: token
+                    });
+                  } else {
+                    rej({
+                      message: "Špatné ověřovací údaje"
+                    });
+                  }
                 } else {
-                  res();
+                  rej({
+                    message: "Špatné ověřovací údaje"
+                  });
                 }
               });
             }));
@@ -187,25 +249,25 @@ function _authenticate() {
   return _authenticate.apply(this, arguments);
 }
 
-function getAll() {
+function getAll(_x2, _x3) {
   return _getAll.apply(this, arguments);
 }
 
 function _getAll() {
   _getAll = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee2() {
+  _regenerator["default"].mark(function _callee2(req, res) {
+    var query;
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            return _context2.abrupt("return", users.map(function (u) {
-              var password = u.password,
-                  userWithoutPassword = (0, _objectWithoutProperties2["default"])(u, ["password"]);
-              return userWithoutPassword;
-            }));
+            query = _User.User.find({}).select("_id username email role");
+            query.exec(function (err, value) {
+              res.send(value);
+            });
 
-          case 1:
+          case 2:
           case "end":
             return _context2.stop();
         }
@@ -215,7 +277,7 @@ function _getAll() {
   return _getAll.apply(this, arguments);
 }
 
-function getById(_x2) {
+function getById(_x4) {
   return _getById.apply(this, arguments);
 }
 
