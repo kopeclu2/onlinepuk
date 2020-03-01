@@ -5,13 +5,13 @@ const loadingMatchesPending = () => ({type:'LOADING_MATCHES_PENDING'})
 
 export const loadMatches = () => (dispatch) => {
     dispatch(loadingMatchesPending())
-    Axios.get('http://onlinepuk.herokuapp.com/matches')
+    Axios.get('/matches')
     .then(({data}) => {
         dispatch({type:'LOADING_MATCHES', payload: data})
         dispatch({type: 'LOADING_MATCHES_FINISH'})
     })
     .catch((err) => {})
-    Axios.get('http://localhost:/matches')
+    Axios.get('/matches')
     .then(({data}) =>{
         dispatch({type:'LOADING_MATCHES_FINSIHED', payload: data})
     })
