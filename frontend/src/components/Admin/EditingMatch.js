@@ -10,7 +10,13 @@ import ActionsCreate from "./EditingMatch/ActionsCreate";
 import ActionsMap from "./EditingMatch/ActionsMap";
 import { checkForValidUser } from "../../actions/checkForValidUser";
 
-const socket = openSocket.connect(process.env.NODE_ENV === 'production' ? 'https://onlinepuk.herokuapp.com/' : '/');
+const socket = openSocket.connect(
+  process.env.NODE_ENV === "production"
+    ? window.location.origin === "http://localhost:4000"
+      ? "/"
+      : "https://onlinepuk.herokuapp.com/"
+    : "/"
+);
 
 let EditingMatch = ({ match, matchValues,checkForValidUser }) => {
   const scoreGoal = () => {

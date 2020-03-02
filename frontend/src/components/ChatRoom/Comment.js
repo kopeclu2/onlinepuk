@@ -26,10 +26,11 @@ import { isNil } from "ramda";
 import withWidth, { isWidthDown } from "@material-ui/core/withWidth";
 const socket = openSocket.connect(
   process.env.NODE_ENV === "production"
-    ? "https://onlinepuk.herokuapp.com/"
+    ? window.location.origin === "http://localhost:4000"
+      ? "/"
+      : "https://onlinepuk.herokuapp.com/"
     : "/"
 );
-
 const useStyles = makeStyles(theme => ({
   root: {
     width: "100%",

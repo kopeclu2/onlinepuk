@@ -23,47 +23,59 @@ import { liveSuccessMatch } from "./actions/Admin/liveSuccessmatch.js";
 import { finishedMatch } from "./actions/Admin/finishedSuccess.js";
 import "./css/index.css";
 import { loadTeams } from "./actions/teams.js";
-import {loadUserFromToken} from './actions/loadUserFromToken.js'
-import KWD_LOGO from './kwd_logo.png'
+import { loadUserFromToken } from "./actions/loadUserFromToken.js";
+import KWD_LOGO from "./kwd_logo.png";
 import ChatRoom from "./pages/ChatRooms";
 import loadComments, { addAllcoments } from "./actions/loadComments";
 
-var moment = require('moment');
-moment.locale('cs');
-const socket = openSocket.connect(process.env.NODE_ENV === 'production' ? 'https://onlinepuk.herokuapp.com/' : '/');
-socket.on('connect', function(){
-  'CONNECTION SUCCESS'
+var moment = require("moment");
+moment.locale("cs");
+const socket = openSocket.connect(
+  process.env.NODE_ENV === "production"
+    ? window.location.origin === "http://localhost:4000"
+      ? "/"
+      : "https://onlinepuk.herokuapp.com/"
+    : "/"
+);
+socket.on("connect", function() {
+  "CONNECTION SUCCESS";
 });
 export const history = createBrowserHistory();
-console.log(process.env.NODE_ENV)
-console.log(window.location.origin)
+console.log(process.env.NODE_ENV);
+console.log(window.location.origin);
 toast.configure();
 class App extends Component {
   componentDidMount() {
-    this.props.loadUserFromToken()
+    this.props.loadUserFromToken();
     setInterval(() => this.props.loadMatches(), 10000);
     this.props.loadMatches();
     socket.on("goal", match => {
       this.props.updateAfterGoalSocket(match);
     });
     socket.on("ALL_COMMENTS", docs => {
-      this.props.addAllcoments(docs)
-    })
+      this.props.addAllcoments(docs);
+    });
     socket.on("liveSucces", match => {
-      console.log('LIVE')
+      console.log("LIVE");
       this.props.liveSuccessMatch(match);
     });
     socket.on("finishedSuccess", match => {
-      console.log('finished', match)
+      console.log("finished", match);
       this.props.finishedMatch(match);
     });
     this.props.loadTeams();
-    this.props.loadComments()
+    this.props.loadComments();
   }
   render() {
     return (
       <ConnectedRouter history={history}>
-        <div style={{ minHeight: "100vh", backgroundColor: 'rgb(245, 245, 245)', position: 'relative' }}  >
+        <div
+          style={{
+            minHeight: "100vh",
+            backgroundColor: "rgb(245, 245, 245)",
+            position: "relative"
+          }}
+        >
           <NavigationBar history={history} />
           <Switch>
             <Route exact path="/login" render={() => <LoginPage />} />
@@ -81,7 +93,6 @@ class App extends Component {
               component={Admin}
             />
           </Switch>
-          
         </div>
       </ConnectedRouter>
     );
@@ -90,7 +101,16 @@ class App extends Component {
 
 export default connect(
   state => ({ matchesLoaded: state.matches.matchesLoaded }),
-  { liveSuccessMatch,loadComments, loadTeams,addAllcoments, updateAfterGoalSocket,loadUserFromToken, finishedMatch, loadMatches }
+  {
+    liveSuccessMatch,
+    loadComments,
+    loadTeams,
+    addAllcoments,
+    updateAfterGoalSocket,
+    loadUserFromToken,
+    finishedMatch,
+    loadMatches
+  }
 )(App);
 
 /*

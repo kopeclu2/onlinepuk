@@ -20,6 +20,7 @@ import { isNil, isEmpty } from "ramda";
 import MatchActionHome from "../components/Match/MatchActionHome";
 import MatchActionHost from "../components/Match/MatchActionHost";
 import PeriodMatch from "../components/Match/PeriodMatch";
+import Loader from "../components/Loader";
 
 const useStyles = makeStyles(theme => ({
   "@keyframes blinker": {
@@ -194,7 +195,7 @@ const MatchDetail = ({ match, matchDetail, matches, width }) => {
       </WidthWrapper>
     </div>
   ) : (
-    <CircularProgress />
+    <Loader />
   );
 };
 export default connect(

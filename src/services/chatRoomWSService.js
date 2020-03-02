@@ -2,6 +2,7 @@ import { ChatRoomComment } from "../models/ChatRoomComment";
 import config from "../config.json";
 import jwt from "jsonwebtoken";
 import { isNil } from "ramda";
+import logger from "heroku-logger";
 
 export const chatWebSocket = socket => {
   socket.on("createComment", ({ token, user, content }) => {
@@ -49,6 +50,7 @@ export const chatWebSocket = socket => {
     });
   });
   socket.on("createSubComment", ({ token, parrentID, content, user }) => {
+    logger.info('create sub comment')
     const parentComment = parrentID;
     verifyTokenUSer(token, (err2, decoded) => {
       if (decoded) {
@@ -66,6 +68,9 @@ export const chatWebSocket = socket => {
               getAllComments(docs => {
                 socket.broadcast.emit("ALL_COMMENTS", docs);
               });
+              logger.info('comments back ')
+            } else {
+              logger.error('sub comment ERROR', err)
             }
           });
         });

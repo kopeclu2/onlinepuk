@@ -63,7 +63,7 @@ const MatchActionHome = ({
             {generalType ===3  && otherSymbols[type].desc}
           </div> } 
           
-          <Typography variant={"body1"} style={mobile ? {fontSize: '0.8rem', paddingLeft:'5px'}: {}}>{content}</Typography>
+          <Typography variant={"body1"} style={mobile ? {fontSize: '0.8rem', paddingLeft:'15px'}: {}}>{content}</Typography>
           {faulType !== 0 && <p style={{fontSize: mobile ? '0.7rem' : '0.8rem', margin:'0',color: 'darkgray',paddingLeft:'5px'}}>{'('}
             {generalType ===1  && faulTypes[faulType]}
             {generalType ===0  && goalTypes[faulType].desc}
