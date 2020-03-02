@@ -20,7 +20,9 @@ const PeriodMatch = ({ action }) => {
         style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
+          fontSize:"0.875rem",
+          margin:"0px"
         }}
         variant="subtitle1"
         gutterBottom

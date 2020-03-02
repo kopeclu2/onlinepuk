@@ -105,12 +105,12 @@ const NavigationBar = ({ history, user, width, logout }) => {
       <AppBar position="static" color="primary" className={classes.appBar}>
         <Toolbar>
           <Link to="/">
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h6" style={mobile ? {fontSize: '0.9rem'} : {}} className={classes.title}>
               Onlajny - OLLH
             </Typography>
           </Link>
           <Link to="/chatRoom" style={{ marginLeft: "20px" }}>
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h6" className={classes.title} style={mobile ? {fontSize: '0.9rem'} : {}}>
               Diskuze
             </Typography>
           </Link>
@@ -118,8 +118,9 @@ const NavigationBar = ({ history, user, width, logout }) => {
             <Typography
               onClick={() => history.push("/admin")}
               variant="h6"
+              
               className={classes.title}
-              style={{ cursor: "pointer", marginLeft: "20px" }}
+              style={mobile ? {fontSize: '0.9rem', cursor: "pointer", marginLeft: "20px"} : { cursor: "pointer", marginLeft: "20px" }}
             >
               Admin
             </Typography>

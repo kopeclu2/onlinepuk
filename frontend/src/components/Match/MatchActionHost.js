@@ -27,10 +27,10 @@ const MatchActionHost = ({
           direction="row"
           alignItems={"center"}
           xs={mobile ? 9 : 11 }
-          style={{ textAlign: "right", marginRight: mobile ?"0px"  : "-15px" }}
+          style={{ textAlign: "right", marginRight: mobile ? "0px"  : "-15px", padding: mobile ? '5px' : '0px' }}
           justify="flex-end"
         >
-          {faulType !== 0 && <p style={{fontSize: mobile ? '0.7rem' : '0.8rem', margin:'0',color: 'darkgray',paddingRight:'20px'}}>{'('}
+          {faulType !== 0 && <p style={{fontSize: mobile ? '0.7rem' : '0.8rem', margin:'0',color: 'darkgray',paddingRight:'5px'}}>{'('}
             {generalType ===1  && faulTypes[faulType]}
             {generalType ===0  && goalTypes[faulType].desc}
             {')'}
@@ -49,11 +49,11 @@ const MatchActionHost = ({
         { mobile ? <Grid
           container
           direction="row"
-          justify="flex-end"
+          justify="center"
           alignItems="center"
           xs={1}
         //  md={1}
-          style={mobile ? {transform: 'scale(0.8)'} : {}}
+          style={mobile ? {transform: 'scale(0.8)', marginRight: '-10px'} : {}}
         >
           {generalType ===0  && goalActions[type].desc}
             {generalType ===1  && matchActions[type].desc}

@@ -6,7 +6,8 @@ export const goalActions = [
     desc: <i class="fas fa-hockey-puck"></i>
   }
 ];
-
+const padding = "1px 4px 1px 4px";
+const paddingSmallWidth ="1px 2px 1px 2px";
 export const periodActions = [
   { id: 0, desc: "1.Třetina" },
   { id: 1, desc: "2.Třetina" },
@@ -43,7 +44,7 @@ const matchActions = [
       <div
         style={{
           backgroundColor: "#f9c91e",
-          padding: "2px",
+          padding: padding,
           borderRadius: "4px"
         }}
       >
@@ -60,7 +61,7 @@ const matchActions = [
       <div
         style={{
           backgroundColor: "#f9c91e",
-          padding: "2px",
+          padding: padding,
           borderRadius: "4px"
         }}
       >
@@ -76,7 +77,7 @@ const matchActions = [
       <div
         style={{
           backgroundColor: "#f9c91e",
-          padding: "2px",
+          padding: paddingSmallWidth,
           borderRadius: "4px"
         }}
       >
@@ -92,7 +93,7 @@ const matchActions = [
       <div
         style={{
           backgroundColor: "#f9c91e",
-          padding: "2px",
+          padding: padding,
           borderRadius: "4px"
         }}
       >
@@ -108,7 +109,7 @@ const matchActions = [
       <div
         style={{
           backgroundColor: "#f9c91e",
-          padding: "2px",
+          padding: padding,
           borderRadius: "4px"
         }}
       >
@@ -124,7 +125,7 @@ const matchActions = [
       <div
         style={{
           backgroundColor: "#f9c91e",
-          padding: "2px",
+          padding: padding,
           borderRadius: "4px"
         }}
       >
@@ -140,7 +141,7 @@ const matchActions = [
       <div
         style={{
           backgroundColor: "#f9c91e",
-          padding: "2px",
+          padding: padding,
           borderRadius: "4px"
         }}
       >
@@ -156,7 +157,7 @@ const matchActions = [
       <div
         style={{
           backgroundColor: "#f9c91e",
-          padding: "2px",
+          padding: paddingSmallWidth,
           borderRadius: "4px"
         }}
       >
@@ -172,7 +173,7 @@ const matchActions = [
       <div
         style={{
           backgroundColor: "#f9c91e",
-          padding: "2px",
+          padding: paddingSmallWidth,
           borderRadius: "4px"
         }}
       >
@@ -188,7 +189,7 @@ const matchActions = [
       <div
         style={{
           backgroundColor: "#f9c91e",
-          padding: "2px",
+          padding: paddingSmallWidth,
           borderRadius: "4px"
         }}
       >
@@ -204,7 +205,7 @@ const matchActions = [
       <div
         style={{
           backgroundColor: "#f9c91e",
-          padding: "2px",
+          padding: paddingSmallWidth,
           borderRadius: "4px"
         }}
       >
@@ -220,7 +221,7 @@ const matchActions = [
       <div
         style={{
           backgroundColor: "#f9c91e",
-          padding: "2px",
+          padding: paddingSmallWidth,
           borderRadius: "4px"
         }}
       >

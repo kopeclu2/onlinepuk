@@ -40,7 +40,7 @@ const MatchActionHome = ({
           alignItems="center"
           xs={1}
           md={1}
-          style={mobile ? {transform: 'scale(0.8)'} : {}}
+          style={mobile ? {transform: 'scale(0.8)', marginLeft: "-10px"} : {}}
         >
           {generalType ===0  && goalActions[type].desc}
             {generalType ===1  && matchActions[type].desc}
@@ -63,8 +63,8 @@ const MatchActionHome = ({
             {generalType ===3  && otherSymbols[type].desc}
           </div> } 
           
-          <Typography variant={"body1"} style={mobile ? {fontSize: '0.8rem'}: {}}>{content}</Typography>
-          {faulType !== 0 && <p style={{fontSize: mobile ? '0.7rem' : '0.8rem', margin:'0',color: 'darkgray',paddingLeft:'20px'}}>{'('}
+          <Typography variant={"body1"} style={mobile ? {fontSize: '0.8rem', paddingLeft:'5px'}: {}}>{content}</Typography>
+          {faulType !== 0 && <p style={{fontSize: mobile ? '0.7rem' : '0.8rem', margin:'0',color: 'darkgray',paddingLeft:'5px'}}>{'('}
             {generalType ===1  && faulTypes[faulType]}
             {generalType ===0  && goalTypes[faulType].desc}
             {')'}
