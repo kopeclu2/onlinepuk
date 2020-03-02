@@ -26,8 +26,8 @@ const MatchActionHost = ({
           container
           direction="row"
           alignItems={"center"}
-          xs={9}
-          style={{ textAlign: "right" }}
+          xs={mobile ? 9 : 11 }
+          style={{ textAlign: "right", marginRight: mobile ?"0px"  : "-15px" }}
           justify="flex-end"
         >
           {faulType !== 0 && <p style={{fontSize: mobile ? '0.7rem' : '0.8rem', margin:'0',color: 'darkgray',paddingRight:'20px'}}>{'('}
@@ -35,34 +35,43 @@ const MatchActionHost = ({
             {generalType ===0  && goalTypes[faulType].desc}
             {')'}
           </p> }    
-          <Typography variant={"body1"} style={mobile && {fontSize: '0.8rem'}}>{content}</Typography>
+          <Typography variant={"body1"} style={mobile ? {fontSize: '0.8rem'} : {}}>{content}</Typography>
+
+         {
+           !mobile && <div style={{ marginLeft: "15px", marginRight: "10px"}}>
+           {generalType ===0  && goalActions[type].desc}
+             {generalType ===1  && matchActions[type].desc}
+             {generalType ===2  && periodActions[type].desc}
+             {generalType ===3  && otherSymbols[type].desc}
+           </div>
+         } 
         </Grid>
-        <Grid
+        { mobile ? <Grid
           container
           direction="row"
-          justify="center"
+          justify="flex-end"
           alignItems="center"
           xs={1}
-          md={1}
-          style={mobile && {transform: 'scale(0.8)'}}
+        //  md={1}
+          style={mobile ? {transform: 'scale(0.8)'} : {}}
         >
           {generalType ===0  && goalActions[type].desc}
             {generalType ===1  && matchActions[type].desc}
             {generalType ===2  && periodActions[type].desc}
             {generalType ===3  && otherSymbols[type].desc}
-        </Grid>
+        </Grid>  : null}
 
         <Grid
           container
           direction="row"
           justify="center"
           alignItems="center"
-          xs={2}
-          md={1}
+          xs={mobile ? 2 : 1}
+          //md={1}
         >
-          <Typography variant={"body1"} style={mobile && {fontSize: '0.8rem'}}>{time}</Typography>
-          <Typography variant={"body1"} style={mobile && {fontSize: '0.8rem'}}>:</Typography>
-          <Typography variant={"body1"} style={mobile && {fontSize: '0.8rem'}}>{seconds}</Typography>
+          <Typography variant={"body1"} style={mobile ? {fontSize: '0.8rem'} : {}}>{time}</Typography>
+          <Typography variant={"body1"} style={mobile ? {fontSize: '0.8rem'} : {}}>:</Typography>
+          <Typography variant={"body1"} style={mobile ? {fontSize: '0.8rem'} : {}}>{seconds}</Typography>
         </Grid>
       </Grid>
     </Paper>
