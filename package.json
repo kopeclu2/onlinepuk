@@ -27,7 +27,7 @@
         "concurrently": "^5.0.2",
         "cors": "^2.8.5",
         "express": "^4.16.4",
-        "express-jwt": "^5.3.1",
+        "express-jwt": "^6.0.0",
         "heroku-logger": "^0.3.3",
         "jsonwebtoken": "^8.4.0",
         "jwt-decode": "^2.2.0",
