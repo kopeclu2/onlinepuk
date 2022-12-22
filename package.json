@@ -29,7 +29,7 @@
         "express": "^4.16.4",
         "express-jwt": "^5.3.1",
         "heroku-logger": "^0.3.3",
-        "jsonwebtoken": "^8.4.0",
+        "jsonwebtoken": "^9.0.0",
         "jwt-decode": "^2.2.0",
         "moment": "^2.24.0",
         "mongoose": "^5.9.2",
